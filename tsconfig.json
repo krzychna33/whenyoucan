@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "dist/",
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es2015",
+    "jsx": "react",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "files": [
+    "./src/custom.d.ts"
+  ]
+}
