@@ -1,0 +1,2 @@
+
+export const ADD_NEW_ATTENDANCE = "ADD_NEW_ATTENDANCE";

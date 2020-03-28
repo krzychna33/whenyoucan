@@ -2,60 +2,23 @@ import * as React from "react";
 import * as moment from "moment";
 import * as style from "./style.scss"
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import {connect} from "react-redux";
+import {StoreInteface} from "../../../stores/configureStore";
+import {addNewAttendance} from "../../../actions/weeklyCalendar";
+import {ReservedAttendances} from "../../../Interfaces/ReservedAttendances";
+import {UserInterface} from "../../../Interfaces/userInterface";
 
 interface IWeeklyCardViewProps {
-    day: moment.Moment;
+    day: moment.Moment
+    user: UserInterface,
+    reservedAttendances: ReservedAttendances[],
+    addNewAttendance: any
 }
 
-interface IWeeklyCardViewState {
-    reservedTimes: any
-}
-
-
-
-class WeeklyCardView extends React.Component<IWeeklyCardViewProps, IWeeklyCardViewState> {
+class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
 
     constructor(props: IWeeklyCardViewProps) {
         super(props);
-        this.state = {
-            reservedTimes: [
-                {
-                    user: "Błażej",
-                    times: [
-                        moment("2020-03-25 17:00:00"),
-                        moment("2020-03-27 17:00:00"),
-                        moment("2020-03-27 18:00:00"),
-                        moment("2020-03-27 12:00:00")
-                    ]
-                },
-                {
-                    user: "Krzysiek",
-                    times: [
-                        moment("2020-03-25 17:00:00"),
-                        moment("2020-03-23 18:00:00"),
-                        moment("2020-03-23 19:00:00"),
-                        moment("2020-03-23 20:00:00"),
-                        moment("2020-03-23 21:00:00"),
-                        moment("2020-03-27 17:00:00"),
-                        moment("2020-03-27 18:00:00"),
-                        moment("2020-03-27 12:00:00")
-                    ]
-                },
-                {
-                    user: "Laurka",
-                    times: [
-                        moment("2020-03-25 17:00:00"),
-                        moment("2020-03-23 18:00:00"),
-                        moment("2020-03-23 19:00:00"),
-                        moment("2020-03-23 20:00:00"),
-                        moment("2020-03-23 21:00:00"),
-                        moment("2020-03-27 17:00:00"),
-                        moment("2020-03-27 18:00:00"),
-                        moment("2020-03-27 12:00:00")
-                    ]
-                }
-            ]
-        }
     }
 
     renderHours = (): Array<any> => {
@@ -64,28 +27,44 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps, IWeeklyCardVi
         hour.minutes(0);
         hour.seconds(0);
         for (let i: number = 0; i<24; i++) {
+            const hourHook = hour.clone();
             let isSame = false;
             const reservedElements: any = [];
-            this.state.reservedTimes.forEach((reservedTime: any) => {
+            let hasOwnAttendance = false;
+            this.props.reservedAttendances.forEach((reservedTime: any) => {
                 reservedTime.times.forEach((time: moment.Moment) => {
                     if (time.isSame(hour)) {
                         isSame = true;
+                        if (reservedTime.user.id === this.props.user.id) {
+                            hasOwnAttendance = true;
+                        }
                         reservedElements.push(
                             <div className={style.reservationElement}>
                                 <div
                                     className={style.reservationElement__userLetter}
                                 >
                                     <div className={style.userName}>
-                                        {reservedTime.user}
+                                        {reservedTime.user.name}
                                     </div>
-                                    {reservedTime.user.substr(0,1)}
+                                    {reservedTime.user.name.substr(0,1)}
                                 </div>
                             </div>
                         )
                     }
                 })
             });
-            reservedElements.push(<div className={style.addNewReservation}><AddCircleIcon/></div>)
+            if (!hasOwnAttendance) {
+                reservedElements.push(
+                    <div className={style.addNewReservation}
+                         onClick={() => {
+                             this.props.addNewAttendance(hourHook, this.props.user)
+                         }}
+                    >
+                        <AddCircleIcon/>
+                    </div>
+                )
+            }
+
 
             hoursArray.push(
                 <div className={style.dailyHour}>
@@ -132,4 +111,16 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps, IWeeklyCardVi
     }
 }
 
-export default WeeklyCardView;
+const mapStateToProps = (state: StoreInteface) => {
+    return {
+        user: state.authReducer.user
+    }
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        addNewAttendance: (time: moment.Moment, user: UserInterface) => dispatch(addNewAttendance(time, user))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WeeklyCardView);

@@ -1,0 +1,28 @@
+.content {
+    padding-top: 64px;
+    flex-grow: 1;
+    display: flex
+}
+
+.drawer{
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.drawerPaper {
+    width: 320px;
+    box-sizing: border-box;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.roomInfo {
+    height: 40%;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.yourAttendance {
+    height: 60%;
+}

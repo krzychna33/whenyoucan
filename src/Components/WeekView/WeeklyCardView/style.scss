@@ -1,7 +1,5 @@
 .weeklyCardView {
-    display: flex;
     height: 100%;
-    flex-direction: column;
     padding: 10px 0px 20px 0px;
     &:not(:last-child) {
         border-right: 1px solid #e0e0e0;
@@ -10,7 +8,6 @@
 
 .header {
     box-sizing: border-box;
-
     width: 100%;
     padding-left: 10px;
     padding-right: 10px;
@@ -64,28 +61,44 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #1565c0;
+        background-color: #3F51B4;
         margin-right: 5px;
         padding: 2px;
         color: #FFF;
         cursor: pointer;
+        position: relative;
 
         &:hover .userName {
             display: block;
         }
     }
-
-
-
 }
 
 .userName {
     display: none;
-    color: black;
+    color: #FFF;
     position: absolute;
-    bottom: 80px;
-}
+    width: 160px;
+    background-color: #7986cb;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
 
+    &::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+    }
+}
 
 .addNewReservation {
     height: 100%;

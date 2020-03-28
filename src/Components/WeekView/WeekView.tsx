@@ -3,13 +3,22 @@ import * as moment from "moment";
 import * as style from "./style.scss"
 import WeeklyCardView from "./WeeklyCardView/WeeklyCardView";
 import Button from '@material-ui/core/Button';
+import {AppBar, IconButton, Toolbar} from "@material-ui/core";
+import {connect} from "react-redux"
+import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
+import {StoreInteface} from "../../stores/configureStore";
+import {ReservedAttendances} from "../../Interfaces/ReservedAttendances";
 
 interface IWeekViewState {
     offset: number,
     weekPointer: moment.Moment
 }
 
-class WeekView extends React.Component<any, IWeekViewState> {
+interface IWeekViewProps {
+    weeklyCalendar: WeeklyCalendarReducerInterface
+}
+
+class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
 
     constructor(props: any) {
         super(props);
@@ -60,8 +69,22 @@ class WeekView extends React.Component<any, IWeekViewState> {
 
         for (let i: number = 0; i<7; i++) {
             let dayCopy = weekPointer.clone();
+            dayCopy.add(i, "day");
+            const dataToSend: ReservedAttendances[] = this.props.weeklyCalendar.reservedAttendances.map((userData) => {
+                const times = userData.times.filter((time) => {
+                    if (time.isSame(dayCopy, "day")) {
+                        return time;
+                    }
+                });
+                return {
+                    ...userData,
+                    times
+                }
+            });
+
+
             days.push(
-                <WeeklyCardView day={dayCopy.add(i, "day")}/>
+                <WeeklyCardView day={dayCopy} reservedAttendances={dataToSend}/>
             )
         }
         return days;
@@ -70,19 +93,23 @@ class WeekView extends React.Component<any, IWeekViewState> {
     render() {
         return (
             <div className={style.container}>
-                <div className={style.header}>
-                    <div>
-                        <Button variant="contained" onClick={this.decreaseOffset} color={"primary"}>PREVIOUS WEEK</Button>
-                    </div>
-                    <div>
-                        {
-                            this.state.weekPointer.format("MMMM YYYY")
-                        }
-                    </div>
-                    <div>
-                        <Button variant="contained" onClick={this.increaseOffset} color={"primary"}>NEXT WEEK</Button>
-                    </div>
-                </div>
+                <AppBar
+                    className={style.bar}
+                >
+                    <Toolbar className={style.appToolbar}>
+                        <div>
+                            <Button variant="contained" onClick={this.decreaseOffset} color={"secondary"}>PREVIOUS WEEK</Button>
+                        </div>
+                        <div>
+                            {
+                                this.state.weekPointer.format("MMMM YYYY")
+                            }
+                        </div>
+                        <div>
+                            <Button variant="contained" onClick={this.increaseOffset} color={"secondary"}>NEXT WEEK</Button>
+                        </div>
+                    </Toolbar>
+                </AppBar>
                 <div className={style.weekView}>
                     {this.renderDays()}
                 </div>
@@ -91,4 +118,10 @@ class WeekView extends React.Component<any, IWeekViewState> {
     }
 }
 
-export default WeekView;
+const mapStateToProps = (state: StoreInteface) => {
+    return {
+        weeklyCalendar: state.weeklyCalendar
+    }
+};
+
+export default connect(mapStateToProps)(WeekView);

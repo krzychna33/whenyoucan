@@ -9,46 +9,35 @@ import {
     List,
     ListItem,
     ListItemIcon,
-    ListItemText
+    ListItemText, Button
 } from "@material-ui/core";
 import { createStyles, Theme, makeStyles, withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import * as style from "./style.scss"
+import {connect} from "react-redux";
+import {UserInterface} from "../../Interfaces/userInterface";
+import {StoreInteface} from "../../stores/configureStore";
+import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
 
-const drawerWidth = 240;
+const drawerWidth = 320;
 
 const useStyles = (theme: Theme) => (
     {
         root: {
             display: 'flex',
-            height: '95vh'
+            maxWidth: '100vw',
+            height: '100vh'
         },
-        appBar: {
-            width: `calc(100% - ${drawerWidth}px)`,
-            marginLeft: drawerWidth,
-            height: 64
-        },
-        drawer: {
-            width: drawerWidth,
-            flexShrink: 0,
-        },
-        drawerPaper: {
-            width: drawerWidth,
-        },
-        // necessary for content to be below app bar
         toolbar: theme.mixins.toolbar,
-        content: {
-            paddingTop: 64,
-            flexGrow: 1,
-            backgroundColor: theme.palette.background.default,
-            padding: theme.spacing(3),
-        },
     }
 );
 
 interface ICalendarProps {
-    classes: any
+    classes: any,
+    user: UserInterface,
+    weeklyCalendar: WeeklyCalendarReducerInterface
 }
 
 class Calendar extends React.Component<ICalendarProps>{
@@ -59,47 +48,30 @@ class Calendar extends React.Component<ICalendarProps>{
     render () {
         const {classes} = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar
-                    className={classes.appBar}
-                    position={"fixed"}
-                >
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="menu">
-                            <MenuIcon/>
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>
+            <div className={classes.root} style={{overflowX: 'hidden'}}>
+
                 <Drawer
-                    className={classes.drawer}
+                    className={style.drawer}
                     variant="permanent"
                     classes={{
-                        paper: classes.drawerPaper,
+                        paper: style.drawerPaper,
                     }}
                     anchor="left"
                 >
-                    <div className={classes.toolbar} />
-                    <Divider />
-                    <List>
-                        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider />
-                    <List>
-                        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
+                    <div className={style.roomInfo}>
+                        <h3>Room #1,</h3>
+                        <p>Owner: Krzysztof Surażyński</p>
+                    </div>
+                    <div  className={style.yourAttendance}>
+                        <h3>{this.props.user.name}</h3>
+                        <p>You have added {this.props.weeklyCalendar.newAttendances.length} attendance items.</p>
+                        <Button variant="contained" color="secondary">
+                            Apply
+                        </Button>
+                    </div>
                 </Drawer>
                 <main
-                    className={classes.content}
+                    className={style.content}
                 >
                     <WeekView/>
                 </main>
@@ -108,4 +80,11 @@ class Calendar extends React.Component<ICalendarProps>{
     }
 }
 
-export default withStyles(useStyles)(Calendar);
+const mapStateToProps = (state: StoreInteface) => {
+    return {
+        user: state.authReducer.user,
+        weeklyCalendar: state.weeklyCalendar
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(useStyles)(Calendar));
