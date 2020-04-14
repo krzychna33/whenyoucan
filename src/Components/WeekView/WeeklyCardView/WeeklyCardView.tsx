@@ -35,7 +35,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                 reservedTime.times.forEach((time: moment.Moment) => {
                     if (time.isSame(hour)) {
                         isSame = true;
-                        if (reservedTime.user.id === this.props.user.id) {
+                        if (reservedTime.user._id === this.props.user._id) {
                             hasOwnAttendance = true;
                         }
                         reservedElements.push(
@@ -44,9 +44,9 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                     className={style.reservationElement__userLetter}
                                 >
                                     <div className={style.userName}>
-                                        {reservedTime.user.name}
+                                        {reservedTime.user.firstName}
                                     </div>
-                                    {reservedTime.user.name.substr(0,1)}
+                                    {reservedTime.user.firstName.substr(0,1)}
                                 </div>
                             </div>
                         )
