@@ -1,3 +1,5 @@
+@import "../../../styles/variables";
+
 .weeklyCardView {
     height: 100%;
     padding: 10px 0px 20px 0px;
@@ -55,13 +57,13 @@
 
 .reservationElement {
     &__userLetter {
-        height: 20px;
-        width: 20px;
+        height: 24px;
+        width: 24px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #3F51B4;
+        background-color: $color-dark;
         margin-right: 5px;
         padding: 2px;
         color: #FFF;
@@ -79,7 +81,7 @@
     color: #FFF;
     position: absolute;
     width: 160px;
-    background-color: #7986cb;
+    background-color: $color-highlighted;
     text-align: center;
     border-radius: 6px;
     padding: 8px 0;

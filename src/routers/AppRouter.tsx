@@ -11,6 +11,7 @@ import LoginPage from "../screens/LoginPage/LoginPage";
 import CalendarsList from "../screens/CalendarsList/CalendarsList";
 import PrivateRoute from "./privateRoute";
 import PublicRoute from "./publicRoute";
+import JoinCalendar from "../screens/JoinCalendar/JoinCalendars";
 
 
 class AppRouter extends React.Component{
@@ -21,7 +22,8 @@ class AppRouter extends React.Component{
                     <Route path={"/"} exact={true}>
                         <Landing/>
                     </Route>
-                    <PrivateRoute path={"/calendar/:id"} component={Calendar}/>
+                    <PrivateRoute path={"/calendar/:id"} component={Calendar} exact={true}/>
+                    <Route path={"/calendar/:id/join"} component={JoinCalendar}/>
                     <PrivateRoute path={"/calendars"} component={CalendarsList}/>
                     <PublicRoute path={"/login"} component={LoginPage}/>
                 </Switch>

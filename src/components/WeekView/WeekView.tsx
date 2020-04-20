@@ -3,19 +3,26 @@ import * as moment from "moment";
 import * as style from "./style.scss"
 import WeeklyCardView from "./WeeklyCardView/WeeklyCardView";
 import Button from '@material-ui/core/Button';
-import {AppBar, IconButton, Toolbar} from "@material-ui/core";
 import {connect} from "react-redux"
 import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
 import {StoreInteface} from "../../stores/configureStore";
 import {ReservedAttendances} from "../../Interfaces/ReservedAttendances";
+import {startGetCalendar} from "../../actions/weeklyCalendar";
+import {withRouter, RouteComponentProps, Link} from "react-router-dom";
+import {Moment} from "moment";
+
+interface MatchParams {
+    id: string
+}
 
 interface IWeekViewState {
     offset: number,
     weekPointer: moment.Moment
 }
 
-interface IWeekViewProps {
-    weeklyCalendar: WeeklyCalendarReducerInterface
+interface IWeekViewProps extends RouteComponentProps<MatchParams>{
+    weeklyCalendar: WeeklyCalendarReducerInterface,
+    startGetCalendar(id: string): any
 }
 
 class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
@@ -26,6 +33,11 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
             offset: 0,
             weekPointer: moment().startOf("week").add(1, 'day')
         }
+    }
+
+    componentDidMount(): void {
+        const {id} = this.props.match.params;
+        this.props.startGetCalendar(id);
     }
 
 
@@ -72,7 +84,8 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
             dayCopy.add(i, "day");
             const dataToSend: ReservedAttendances[] = this.props.weeklyCalendar.reservedAttendances.map((userData) => {
                 const times = userData.times.filter((time) => {
-                    if (time.isSame(dayCopy, "day")) {
+                    const parsedTime: Moment = moment(time);
+                    if (parsedTime.isSame(dayCopy, "day")) {
                         return time;
                     }
                 });
@@ -93,23 +106,28 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
     render() {
         return (
             <div className={style.container}>
-                <AppBar
+                <div
                     className={style.bar}
                 >
-                    <Toolbar className={style.appToolbar}>
+                    <div className={style.appToolbar}>
                         <div>
-                            <Button variant="contained" onClick={this.decreaseOffset} color={"secondary"}>PREVIOUS WEEK</Button>
+                            <div>
+                                <Button variant="contained" onClick={this.decreaseOffset} color={"primary"}>PREVIOUS WEEK</Button>
+                            </div>
+                            <div>
+                                {
+                                    this.state.weekPointer.format("MMMM YYYY")
+                                }
+                            </div>
+                            <div>
+                                <Button variant="contained" onClick={this.increaseOffset} color={"primary"}>NEXT WEEK</Button>
+                            </div>
                         </div>
                         <div>
-                            {
-                                this.state.weekPointer.format("MMMM YYYY")
-                            }
+                            <Link to={"/calendars"}>Back to calendars list</Link>
                         </div>
-                        <div>
-                            <Button variant="contained" onClick={this.increaseOffset} color={"secondary"}>NEXT WEEK</Button>
-                        </div>
-                    </Toolbar>
-                </AppBar>
+                    </div>
+                </div>
                 <div className={style.weekView}>
                     {this.renderDays()}
                 </div>
@@ -124,4 +142,10 @@ const mapStateToProps = (state: StoreInteface) => {
     }
 };
 
-export default connect(mapStateToProps)(WeekView);
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        startGetCalendar: (id: string) => dispatch(startGetCalendar(id))
+    }
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WeekView));

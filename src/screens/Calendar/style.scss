@@ -1,28 +1,59 @@
+@import "../../styles/variables";
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
 .content {
-    padding-top: 64px;
     flex-grow: 1;
     display: flex
 }
 
 .drawer{
-    width: 320px;
-    flex-shrink: 0;
-}
-
-.drawerPaper {
-    width: 320px;
     box-sizing: border-box;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+    width: 320px;
+    height: 100%;
+    -webkit-box-shadow: 32px 0px 41px -37px rgba(0,0,0,1);
+    -moz-box-shadow: 32px 0px 41px -37px rgba(0,0,0,1);
+    box-shadow: 32px 0px 41px -37px rgba(0,0,0,1);
+
 }
 
 .roomInfo {
+    width: 100%;
+    padding: 20px 15px;
+    box-sizing: border-box;
     height: 40%;
     border-bottom: 1px solid #e0e0e0;
+    > h3 {
+        font-size: $font-size-ml;
+        margin-bottom: 20px;
+    }
 }
 
 .yourAttendance {
+    > h3 {
+        font-size: $font-size-ml;
+        margin-bottom: 20px;
+    }
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px 15px;
     height: 60%;
+}
+
+.addedAttendances {
+    width: 100%;
+    > p {
+        margin-bottom: 10px;
+    }
+    > div {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: row;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
 }

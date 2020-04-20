@@ -1,0 +1,58 @@
+@import "../../styles/variables";
+
+.container {
+    width: 100vw;
+}
+
+.topBar {
+    box-sizing: border-box;
+    width: 100%;
+    background-color: $color-dark;
+    display: flex;
+    padding: 10px 40px;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.content {
+    padding: 40px 120px;
+
+    > h2 {
+        margin-bottom: 20px;
+    }
+}
+
+.addCalendar {
+    > form {
+        display: flex;
+        flex-direction: column;
+
+        > div {
+            padding-bottom: 15px;
+        }
+    }
+
+    &__hidden {
+        height: 0;
+    }
+}
+
+.calendarsList {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    > div {
+        box-sizing: border-box;
+        width: 33%;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 20px;
+    }
+}
+
+.card {
+    width: 100%;
+    background-color: $color-light;
+}

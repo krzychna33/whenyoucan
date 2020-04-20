@@ -1,68 +1,47 @@
 import * as moment from "moment";
 import {Moment} from "moment";
-import {ADD_NEW_ATTENDANCE} from "../actions/actions.const";
+import {
+    ADD_NEW_ATTENDANCE,
+    GET_CALENDAR_ERROR,
+    GET_CALENDAR_FETCH,
+    GET_CALENDAR_SUCCESS
+} from "../actions/actions.const";
 import {ReservedAttendances} from "../Interfaces/ReservedAttendances";
+import {WeeklyCalendarDao} from "../Interfaces/Dao/weeklyCalendarDao";
 
 
-export interface WeeklyCalendarReducerInterface {
-    reservedAttendances: ReservedAttendances[],
+export interface WeeklyCalendarReducerInterface extends WeeklyCalendarDao{
+    isLoading: boolean,
     newAttendances: Array<Moment>
-
 }
 
 const weeklyCardReducerDefaultState: WeeklyCalendarReducerInterface = {
-    reservedAttendances: [
-        // {
-        //     user: {
-        //         _id: "23e23",
-        //         firstName: "Błażej",
-        //         lastName: "kk",
-        //         email: "dssd@dwem.pl"
-        //     },
-        //     times: [
-        //         moment("2020-03-25 17:00:00"),
-        //         moment("2020-03-27 17:00:00"),
-        //         moment("2020-03-27 18:00:00"),
-        //         moment("2020-03-27 12:00:00")
-        //     ]
-        // },
-        // {
-        //     user: {
-        //         _id: "2323",
-        //         firstName: "Krzysiek",
-        //         lastName: "kk",
-        //         email: "sdsds@ww.pl"
-        //     },
-        //     times: [
-        //         moment("2020-03-25 17:00:00"),
-        //         moment("2020-03-23 18:00:00"),
-        //         moment("2020-03-23 19:00:00"),
-        //     ]
-        // },
-        // {
-        //     user: {
-        //         _id: "232323",
-        //         firstName: "Laurka",
-        //         lastName: "dsds",
-        //         email: "dsds@ew.pl"
-        //     },
-        //     times: [
-        //         moment("2020-03-25 17:00:00"),
-        //         moment("2020-03-23 18:00:00"),
-        //         moment("2020-03-23 19:00:00"),
-        //         moment("2020-03-23 20:00:00"),
-        //         moment("2020-03-23 21:00:00"),
-        //         moment("2020-03-27 17:00:00"),
-        //         moment("2020-03-27 18:00:00"),
-        //         moment("2020-03-27 12:00:00")
-        //     ]
-        // }
-    ],
+    users: [],
+    name: "",
+    ownerId: "",
+    isLoading: false,
+    reservedAttendances: [],
     newAttendances: []
 };
 
 export default (state: WeeklyCalendarReducerInterface = weeklyCardReducerDefaultState, action: any) => {
     switch (action.type) {
+        case GET_CALENDAR_FETCH:
+            return {
+                ...state,
+                isLoading: true
+            };
+        case GET_CALENDAR_SUCCESS:
+            return {
+                ...state,
+                ...action.data,
+                isLoading: false
+            };
+        case GET_CALENDAR_ERROR:
+            return {
+                ...state,
+                isLoading: false
+            };
         case ADD_NEW_ATTENDANCE:
             const reservedAttendances = state.reservedAttendances.map((attendance) => {
                 if (action.data.user._id == attendance.user._id) {

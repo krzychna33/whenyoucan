@@ -7,6 +7,7 @@ import {StoreInteface} from "../../../stores/configureStore";
 import {addNewAttendance} from "../../../actions/weeklyCalendar";
 import {ReservedAttendances} from "../../../Interfaces/ReservedAttendances";
 import {UserInterface} from "../../../Interfaces/userInterface";
+import {Moment} from "moment";
 
 interface IWeeklyCardViewProps {
     day: moment.Moment
@@ -32,8 +33,9 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
             const reservedElements: any = [];
             let hasOwnAttendance = false;
             this.props.reservedAttendances.forEach((reservedTime: any) => {
-                reservedTime.times.forEach((time: moment.Moment) => {
-                    if (time.isSame(hour)) {
+                reservedTime.times.forEach((time: string) => {
+                    const parsedTime: Moment = moment(time);
+                    if (parsedTime.isSame(hour)) {
                         isSame = true;
                         if (reservedTime.user._id === this.props.user._id) {
                             hasOwnAttendance = true;

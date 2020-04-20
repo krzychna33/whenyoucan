@@ -1,32 +1,25 @@
 import * as React from "react";
-import WeekView from "../../Components/WeekView/WeekView";
-import {Button, Drawer} from "@material-ui/core";
-import {Theme, withStyles} from '@material-ui/core/styles';
+import WeekView from "../../components/WeekView/WeekView";
+import {Button, TextField} from "@material-ui/core";
 import * as style from "./style.scss"
 import {connect} from "react-redux";
-import {UserInterface} from "../../Interfaces/userInterface";
 import {StoreInteface} from "../../stores/configureStore";
 import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
 import {startGetAuthMe} from "../../actions/auth";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
+import {postPushAttendances} from "../../api/weeklyCalendars";
+import {RouteComponentProps} from "react-router-dom"
 
-const drawerWidth = 320;
+interface MatchParams {
+    id: string
+}
 
-const useStyles = (theme: Theme) => (
-    {
-        root: {
-            display: 'flex',
-            maxWidth: '100vw',
-            height: '100vh'
-        },
-        toolbar: theme.mixins.toolbar,
-    }
-);
-
-interface ICalendarProps {
+interface ICalendarProps extends RouteComponentProps<MatchParams> {
     classes: any,
     weeklyCalendar: WeeklyCalendarReducerInterface,
+
     startGetAuthMe(): any,
+
     authReducer: AuthReducerInterface
 }
 
@@ -40,33 +33,40 @@ class Calendar extends React.Component<ICalendarProps> {
         this.props.startGetAuthMe();
     }
 
+    pushAttendances = () => {
+        const {id} = this.props.match.params;
+        postPushAttendances(id, {
+            times: this.props.weeklyCalendar.newAttendances
+        });
+    };
+
     render() {
-        const {classes} = this.props;
         return (
             <React.Fragment>
                 {
                     !this.props.authReducer.isLoading && this.props.authReducer.user ?
-                        <div className={classes.root} style={{overflowX: 'hidden'}}>
-                            <Drawer
+                        <div className={style.container} style={{overflowX: 'hidden'}}>
+                            <div
                                 className={style.drawer}
-                                variant="permanent"
-                                classes={{
-                                    paper: style.drawerPaper,
-                                }}
-                                anchor="left"
                             >
                                 <div className={style.roomInfo}>
-                                    <h3>Room #1,</h3>
-                                    <p>Owner: Krzysztof Surażyński</p>
+                                    <h3>{this.props.weeklyCalendar.name}</h3>
+                                    <TextField id="outlined-basic" label="Invite URL" variant="outlined"
+                                               value={`whenyoucan.app${this.props.location.pathname}/join`}/>
                                 </div>
                                 <div className={style.yourAttendance}>
                                     <h3>{this.props.authReducer.user.firstName}</h3>
-                                    <p>You have added {this.props.weeklyCalendar.newAttendances.length} attendance items.</p>
-                                    <Button variant="contained" color="secondary">
-                                        Apply
-                                    </Button>
+                                    <div className={style.addedAttendances}>
+                                        <p>You have added {this.props.weeklyCalendar.newAttendances.length} attendance
+                                            items.</p>
+                                        <div>
+                                            <Button variant="contained" color="primary" onClick={this.pushAttendances}>
+                                                Apply
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </Drawer>
+                            </div>
                             <main
                                 className={style.content}
                             >
@@ -96,4 +96,4 @@ const mapDispatchToProps = (dispatch: any) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Calendar));
+export default connect(mapStateToProps, mapDispatchToProps)(Calendar);

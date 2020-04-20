@@ -1,11 +1,12 @@
 import * as React from "react"
-import {TextField, Button} from "@material-ui/core";
+import {TextField, Button, withStyles} from "@material-ui/core";
 import * as style from "./style.scss"
 import {connect} from "react-redux";
 import {StoreInteface} from "../../stores/configureStore";
 import {startGetAuthMe, startLogout, startPostLogin} from "../../actions/auth";
-import {withRouter, RouteComponentProps} from "react-router-dom"
+import {withRouter, RouteComponentProps, Link} from "react-router-dom"
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
+import {StyledInput} from "../../components/StyledInput/StyledInput";
 
 interface ILoginPageProps extends RouteComponentProps{
     authReducer: AuthReducerInterface,
@@ -44,14 +45,19 @@ class LoginPage extends React.Component<ILoginPageProps, ILoginPageState> {
     render() {
         return (
             <div className={style.container}>
-                <form className={style.form}>
-                    <h1>WhenUCan.app</h1>
-                    <div>
-                        <TextField id="standard-basic" label="Email" required onChange={this.onEmailChange}/>
-                        <TextField id="standard-basic" label="Password" type="password" required onChange={this.onPasswordChange}/>
+                <div className={style.form}>
+                    <form>
+                        <h1>WhenUCan.app</h1>
+                        <div>
+                            <StyledInput color="secondary" label="Email" required onChange={this.onEmailChange}/>
+                            <StyledInput color="secondary" label="Password" type="password" required onChange={this.onPasswordChange}/>
+                        </div>
+                        <Button variant="contained" color="primary" onClick={this.handleLogin}>Login</Button>
+                    </form>
+                    <div className={style.signupCall}>
+                        <Link to={"/signup"}>Psst... No accout? Create a new one here</Link>
                     </div>
-                    <Button variant="contained" color="primary" onClick={this.handleLogin}>Login</Button>
-                </form>
+                </div>
             </div>
         )
     }

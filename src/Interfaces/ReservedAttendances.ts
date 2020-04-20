@@ -3,5 +3,5 @@ import {UserInterface} from "./userInterface";
 
 export interface ReservedAttendances {
     user: UserInterface,
-    times: Array<Moment>
+    times: Array<string>
 }
