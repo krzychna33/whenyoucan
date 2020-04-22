@@ -18,6 +18,6 @@ export const theme = createMuiTheme({
         }
     },
     typography: {
-        fontSize: 22
+        fontSize: 15
     }
 });

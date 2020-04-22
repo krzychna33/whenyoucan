@@ -7,26 +7,19 @@ import {Link, RouteComponentProps, withRouter} from "react-router-dom"
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {LoginForm} from "../../components/LoginForm/LoginForm";
 
-interface ILoginPageProps extends RouteComponentProps {
-    authReducer: AuthReducerInterface,
-    startPostLogin(email: string, password: string): any,
-    startGetAuthMe(): any
-}
-
 interface ILoginPageState {
     email: string,
     password: string
 }
 
-class LoginPage extends React.Component<ILoginPageProps, ILoginPageState> {
+class SignUpPage extends React.Component {
     render() {
         return (
             <div className={style.container}>
                 <div className={style.content}>
                     <h1>WhenUCan.app</h1>
-                    <LoginForm/>
                     <div className={style.bottomInfo}>
-                        <Link to={"/signup"}>Psst... No accout? Create a new one here</Link>
+                        <Link to={"/login"}>Already have account? Go to login.</Link>
                     </div>
                 </div>
             </div>
@@ -34,16 +27,4 @@ class LoginPage extends React.Component<ILoginPageProps, ILoginPageState> {
     }
 }
 
-const mapStateToProps = (state: StoreInteface) => {
-    return {
-        authReducer: state.authReducer
-    }
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        startGetAuthMe: () => dispatch(startGetAuthMe())
-    }
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginPage));
+export default SignUpPage;

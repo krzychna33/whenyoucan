@@ -12,7 +12,7 @@ import CalendarsList from "../screens/CalendarsList/CalendarsList";
 import PrivateRoute from "./privateRoute";
 import PublicRoute from "./publicRoute";
 import JoinCalendar from "../screens/JoinCalendar/JoinCalendars";
-
+import SignUpPage from "../screens/SignupPage/SignUpPage";
 
 class AppRouter extends React.Component{
     render () {
@@ -26,6 +26,7 @@ class AppRouter extends React.Component{
                     <Route path={"/calendar/:id/join"} component={JoinCalendar}/>
                     <PrivateRoute path={"/calendars"} component={CalendarsList}/>
                     <PublicRoute path={"/login"} component={LoginPage}/>
+                    <PublicRoute path={"/signup"} component={SignUpPage}/>
                 </Switch>
             </Router>
         )

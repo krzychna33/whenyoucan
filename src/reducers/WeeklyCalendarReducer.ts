@@ -16,6 +16,7 @@ export interface WeeklyCalendarReducerInterface extends WeeklyCalendarDao{
 }
 
 const weeklyCardReducerDefaultState: WeeklyCalendarReducerInterface = {
+    _id: "",
     users: [],
     name: "",
     ownerId: "",

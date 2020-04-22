@@ -6,6 +6,7 @@ import {
     GET_AUTH_ME_ERROR,
     GET_AUTH_ME_SUCCESS, GET_AUTH_ME_FETCH, SET_LOGGED_IN, SET_LOGGED_OUT, DELETE_LOGOUT_FETCH
 } from "./actions.const";
+import {toast} from "react-toastify";
 
 
 const postLoginSuccess = () => (
@@ -34,6 +35,7 @@ export const startPostLogin = (email: string, password: string) => {
             localStorage.setItem('token', response.data.token);
             dispatch(postLoginSuccess());
         }).catch((e) => {
+            toast.error(e.data.message);
             dispatch(postLoginError());
         })
     }

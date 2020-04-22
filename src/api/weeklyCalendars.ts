@@ -76,10 +76,14 @@ export const postJoinCalendar = (id: string, pin: string) => {
     });
 };
 
-export const getPublicWeeklyCalendar = (id: string) => {
-    console.log("FFFF")
+export const getConnectedCalendars = () => {
+    const token = localStorage.getItem('token')
+    const options = {
+        headers: {"x-auth": `${token}`}
+    };
+
     return new Promise( (resolve, reject) => {
-        httpRequestHandler.get(`weekly-calendars/public/${id}`).then((response) => {
+        httpRequestHandler.get(`weekly-calendars/connected`, options).then((response) => {
             resolve(response);
         }).catch((e) => {
             reject(e.response);

@@ -5,19 +5,19 @@ import {connect} from "react-redux";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {Button, Card, CardActions, CardContent, TextField} from "@material-ui/core";
 import {Link, RouteComponentProps} from "react-router-dom";
-import {getWeeklyCalendars, postCreateCalendar} from "../../api/weeklyCalendars";
+import {getConnectedCalendars, getWeeklyCalendars, postCreateCalendar} from "../../api/weeklyCalendars";
 import * as style from "./style.scss"
+import {WeeklyCalendarDao} from "../../Interfaces/Dao/weeklyCalendarDao";
 
 interface ICalendarsListProps extends RouteComponentProps {
     auth: AuthReducerInterface,
-
     startGetAuthMe(): any,
-
     startLogout(): any
 }
 
 interface ICalendarsListState {
-    weeklyCalendars: any[],
+    weeklyCalendars: WeeklyCalendarDao[],
+    connectedWeeklyCalendars: WeeklyCalendarDao[],
     newCalendarName: string
 }
 
@@ -27,15 +27,28 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
         super(props);
         this.state = {
             weeklyCalendars: [],
-            newCalendarName: ""
+            newCalendarName: "",
+            connectedWeeklyCalendars: []
         }
     }
 
     componentDidMount(): void {
         this.props.startGetAuthMe();
         getWeeklyCalendars().then((response: any) => {
-            this.setState({weeklyCalendars: response.data.results});
+            if (response.status === 200) {
+                this.setState(
+                    {weeklyCalendars: response.data.results}
+                );
+            }
+        });
+        getConnectedCalendars().then((response: any) => {
+            if (response.status === 200) {
+                this.setState({
+                    connectedWeeklyCalendars: response.data.results
+                })
+            }
         })
+
     }
 
     handleLogout = () => {
@@ -103,6 +116,29 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                             )
                                         })
                                     }
+                                </div>
+                                <div>
+                                    <h2>Connected calendars</h2>
+                                    <div className={style.calendarsList}>
+                                        {
+                                            this.state.connectedWeeklyCalendars.map((calendar) => {
+                                                return (
+                                                    <div>
+                                                        <Card className={style.card}>
+                                                            <CardContent>
+                                                                <p>{calendar.name}</p>
+                                                            </CardContent>
+                                                            <CardActions>
+                                                                <Link to={`/calendar/${calendar._id}`}>
+                                                                    <Button size="small">View</Button>
+                                                                </Link>
+                                                            </CardActions>
+                                                        </Card>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div> :

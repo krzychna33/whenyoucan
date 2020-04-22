@@ -26,6 +26,17 @@ module.exports = {
                     }
                 },
                 "sass-loader" ] },
+            {
+                test: /\.css$/,
+                use: [{
+                    loader: 'style-loader'
+                }, {
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                }]
+            },
             { test: /\.tsx?$/, loader: "babel-loader" },
             { test: /\.tsx?$/, loader: "ts-loader" },
             { test: /\.(png|svg|jpg|gif)$/, use: ['file-loader']},
