@@ -5,6 +5,7 @@ import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {startPostLogin} from "../../actions/auth";
 import * as style from "./style.scss"
+import {postLoginFacebook} from "../../api/auth";
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -16,6 +17,18 @@ export const LoginForm = () => {
         dispatch(startPostLogin(email, password));
     };
 
+    const handleFbLogin = () => {
+        FB.login((result) => {
+            console.log(result)
+            console.log(result.authResponse.accessToken)
+            console.log(result.authResponse.userID)
+            postLoginFacebook({
+                access_token: result.authResponse.accessToken,
+                user_id: result.authResponse.userID
+            })
+        },{scope: 'public_profile,email,user_birthday'})
+    }
+
     return (
         <form className={style.form}>
             <div>
@@ -23,6 +36,7 @@ export const LoginForm = () => {
                 <StyledInput color="secondary" value={password} label="Password" type="password" required onChange={(e) => {setPassword(e.target.value)}}/>
             </div>
             <Button variant="contained" color="primary" onClick={handleLogin}>Login</Button>
+            <Button variant="contained" color="primary" onClick={handleFbLogin}>Login via Facebook</Button>
         </form>
     )
 }

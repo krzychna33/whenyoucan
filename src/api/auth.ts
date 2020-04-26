@@ -96,3 +96,21 @@ export const postRegister = ({email, password, firstName, lastName}: RegisterUse
         })
     });
 };
+
+export interface LoginFacebookDTO {
+    access_token: string,
+    user_id: string
+}
+
+export const postLoginFacebook = ({access_token, user_id}: LoginFacebookDTO) => {
+    return new Promise((resolve, reject) => {
+        httpRequestHandler.post<RegisterUserDao>('/auth/facebook-login', {
+            access_token,
+            user_id
+        }).then((response: AxiosResponse<any>) => {
+            resolve(response);
+        }).catch((e) => {
+            reject(e.response);
+        })
+    });
+};

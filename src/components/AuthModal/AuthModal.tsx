@@ -10,6 +10,8 @@ import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {StoreInteface} from "../../stores/configureStore";
 import {startGetAuthMe} from "../../actions/auth";
+import {Link} from "react-router-dom";
+import {SignUpForm} from "../SignUpForm/SignUpForm";
 
 
 const ModalTrigger = (props: any) => {
@@ -22,6 +24,8 @@ const ModalContent = (props: any) => {
 
     const authReducer: AuthReducerInterface = useSelector((store: StoreInteface) => store.authReducer);
     const dispatch = useDispatch();
+
+    const [currentScreen, setCurrentScreen] = useState("login");
 
 
     const closeByBackground = (event: any) => {
@@ -50,7 +54,22 @@ const ModalContent = (props: any) => {
                 <div>
                     <div className={style.modalInnerContent}>
                         <h1>WhenYouCan.app</h1>
-                        <LoginForm/>
+                        {
+                            currentScreen === "login" ?
+                                <div>
+                                    <LoginForm/>
+                                    <div className={style.bottomInfo}>
+                                        <p onClick={() => setCurrentScreen("signUp")}>Psst... No accout? Create a new one here</p>
+                                    </div>
+                                </div> :
+                                <div>
+                                    <SignUpForm/>
+                                    <div className={style.bottomInfo}>
+                                        <p onClick={() => setCurrentScreen("login")}>Already have an account? Go login.</p>
+                                    </div>
+                                </div>
+                        }
+
                     </div>
                 </div>
             </div>

@@ -12,7 +12,6 @@ import {setLoggedIn, setLoggedOut} from "./actions/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const store = configureStore();
 
 if (localStorage.token) {
