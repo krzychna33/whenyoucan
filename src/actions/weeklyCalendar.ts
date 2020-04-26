@@ -1,11 +1,12 @@
 import * as moment from "moment";
 import {ADD_NEW_ATTENDANCE, GET_CALENDAR_ERROR, GET_CALENDAR_FETCH, GET_CALENDAR_SUCCESS} from "./actions.const";
-import {UserInterface} from "../Interfaces/userInterface";
+import {UserDAO} from "../api/auth";
 import {getWeeklyCalendar} from "../api/weeklyCalendars";
-import {WeeklyCalendarDao} from "../Interfaces/Dao/weeklyCalendarDao";
+import {WeeklyCalendarDao} from "../api/weeklyCalendars";
+import {AxiosResponse} from "../Interfaces/AxiosResponse";
 
 
-export const addNewAttendance = (time: moment.Moment, user: UserInterface) => {
+export const addNewAttendance = (time: moment.Moment, user: UserDAO) => {
     return {
         type: ADD_NEW_ATTENDANCE,
         data: {
@@ -36,7 +37,7 @@ const getCalendarError = () => (
 export const startGetCalendar = (id: string) => {
     return (dispatch: any) => {
         dispatch(getCalendarFetch());
-        return getWeeklyCalendar(id).then((response: any) => {
+        return getWeeklyCalendar(id).then((response: AxiosResponse<WeeklyCalendarDao>) => {
             dispatch(getCalendarSuccess(response.data))
         }).catch(() => {
             dispatch(getCalendarError());

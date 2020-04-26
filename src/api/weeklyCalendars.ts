@@ -1,5 +1,6 @@
 import {httpRequestHandler} from "../utils/httpRequestHandler";
 import {ReservedAttendances} from "../Interfaces/ReservedAttendances";
+import {AxiosResponse} from "axios";
 
 export const getWeeklyCalendars = () => {
     const token = localStorage.getItem('token')
@@ -16,6 +17,15 @@ export const getWeeklyCalendars = () => {
     });
 };
 
+export interface WeeklyCalendarDao {
+    _id: string,
+    users: string[],
+    name: string,
+    ownerId: string,
+    pin?: string,
+    reservedAttendances: ReservedAttendances[]
+}
+
 export const getWeeklyCalendar = (id: string) => {
     const token = localStorage.getItem('token')
     const options = {
@@ -23,7 +33,7 @@ export const getWeeklyCalendar = (id: string) => {
     };
 
     return new Promise( (resolve, reject) => {
-        httpRequestHandler.get(`weekly-calendars/${id}`, options).then((response) => {
+        httpRequestHandler.get<AxiosResponse<WeeklyCalendarDao>>(`weekly-calendars/${id}`, options).then((response) => {
             resolve(response);
         }).catch((e) => {
             reject(e.response);

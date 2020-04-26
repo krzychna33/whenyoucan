@@ -7,7 +7,7 @@ import {Button, Card, CardActions, CardContent, TextField} from "@material-ui/co
 import {Link, RouteComponentProps} from "react-router-dom";
 import {getConnectedCalendars, getWeeklyCalendars, postCreateCalendar} from "../../api/weeklyCalendars";
 import * as style from "./style.scss"
-import {WeeklyCalendarDao} from "../../Interfaces/Dao/weeklyCalendarDao";
+import {WeeklyCalendarDao} from "../../api/weeklyCalendars";
 
 interface ICalendarsListProps extends RouteComponentProps {
     auth: AuthReducerInterface,

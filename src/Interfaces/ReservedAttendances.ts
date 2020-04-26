@@ -1,7 +1,6 @@
-import {Moment} from "moment";
-import {UserInterface} from "./userInterface";
+import {UserDAO} from "../api/auth";
 
 export interface ReservedAttendances {
-    user: UserInterface,
+    user: UserDAO,
     times: Array<string>
 }

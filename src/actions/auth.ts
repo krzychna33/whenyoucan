@@ -1,13 +1,25 @@
-import {deleteAuthLogout, getAuthMe, postLogin} from "../api/auth";
 import {
-    POST_LOGIN_SUCCESS,
-    POST_LOGIN_FETCH,
-    POST_LOGIN_ERROR,
+    RegisterUserDao,
+    RegisterUserDto,
+    deleteAuthLogout,
+    getAuthMe,
+    postLogin,
+    postRegister,
+    UserDAO
+} from "../api/auth";
+import {
     GET_AUTH_ME_ERROR,
-    GET_AUTH_ME_SUCCESS, GET_AUTH_ME_FETCH, SET_LOGGED_IN, SET_LOGGED_OUT, DELETE_LOGOUT_FETCH
+    GET_AUTH_ME_FETCH,
+    GET_AUTH_ME_SUCCESS,
+    POST_LOGIN_ERROR,
+    POST_LOGIN_FETCH,
+    POST_LOGIN_SUCCESS, POST_SIGNUP_ERROR,
+    POST_SIGNUP_FETCH, POST_SIGNUP_SUCCESS,
+    SET_LOGGED_IN,
+    SET_LOGGED_OUT
 } from "./actions.const";
 import {toast} from "react-toastify";
-
+import {AxiosResponse, AxiosError} from "axios";
 
 const postLoginSuccess = () => (
     {
@@ -27,11 +39,10 @@ const postLoginError = () => (
     }
 );
 
-
 export const startPostLogin = (email: string, password: string) => {
     return (dispatch: any) => {
         dispatch(postLoginFetch());
-        return postLogin(email, password).then((response: any) => {
+        return postLogin({email, password}).then((response) => {
             localStorage.setItem('token', response.data.token);
             dispatch(postLoginSuccess());
         }).catch((e) => {
@@ -47,7 +58,7 @@ const getAuthMeError = () => (
     }
 );
 
-const getAuthMeSuccess = (user: any) => (
+const getAuthMeSuccess = (user: UserDAO) => (
     {
         type: GET_AUTH_ME_SUCCESS,
         data: {
@@ -63,10 +74,9 @@ const getAuthMeFetch = () => (
 );
 
 export const startGetAuthMe = () => {
-    getAuthMeFetch();
     return (dispatch: any) => {
         dispatch(getAuthMeFetch());
-        return getAuthMe().then((response: any) => {
+        return getAuthMe().then((response) => {
             dispatch(getAuthMeSuccess(response.data));
         }).catch((e) => {
             dispatch(getAuthMeError());
@@ -90,3 +100,30 @@ export const startLogout = () => {
         });
     }
 };
+
+export const postSignUpFetch = () => ({
+    type: POST_SIGNUP_FETCH
+});
+
+export const postSignUpSuccess = () => ({
+    type: POST_SIGNUP_SUCCESS
+});
+
+export const postSignUpError = () => ({
+    type: POST_SIGNUP_ERROR
+});
+
+
+export const startPostSignUp = (data: RegisterUserDto) => {
+    return (dispatch: any) => {
+        dispatch(postSignUpFetch());
+        return postRegister(data).then((response: AxiosResponse<RegisterUserDao>) => {
+            localStorage.setItem("token", response.data.token);
+            dispatch(postSignUpSuccess());
+            toast.success("You have been successfully registered");
+        }).catch((e: AxiosError) => {
+            dispatch(postSignUpError())
+        })
+    }
+};
+

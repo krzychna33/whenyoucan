@@ -6,6 +6,7 @@ import {startGetAuthMe, startPostLogin} from "../../actions/auth";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom"
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {LoginForm} from "../../components/LoginForm/LoginForm";
+import {SignUpForm} from "../../components/SignUpForm/SignUpForm";
 
 interface ILoginPageState {
     email: string,
@@ -18,6 +19,7 @@ class SignUpPage extends React.Component {
             <div className={style.container}>
                 <div className={style.content}>
                     <h1>WhenUCan.app</h1>
+                    <SignUpForm/>
                     <div className={style.bottomInfo}>
                         <Link to={"/login"}>Already have account? Go to login.</Link>
                     </div>

@@ -52,7 +52,7 @@ class Calendar extends React.Component<ICalendarProps> {
                                 <div className={style.roomInfo}>
                                     <h3>{this.props.weeklyCalendar.name}</h3>
                                     <TextField id="outlined-basic" label="Invite URL" variant="outlined"
-                                               value={`whenyoucan.app${this.props.location.pathname}/join`}/>
+                                               value={`${process.env.APP_URL}${this.props.location.pathname}/join`}/>
                                 </div>
                                 <div className={style.yourAttendance}>
                                     <h3>{this.props.authReducer.user.firstName}</h3>

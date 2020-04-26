@@ -1,11 +1,9 @@
 import {StyledInput} from "../StyledInput/StyledInput";
 import {Button} from "@material-ui/core";
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {startPostLogin} from "../../actions/auth";
-import {AuthReducerInterface} from "../../reducers/AuthReducer";
-import {StoreInteface} from "../../stores/configureStore";
 import * as style from "./style.scss"
 
 export const LoginForm = () => {

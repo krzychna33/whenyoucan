@@ -6,12 +6,12 @@ import {connect} from "react-redux";
 import {StoreInteface} from "../../../stores/configureStore";
 import {addNewAttendance} from "../../../actions/weeklyCalendar";
 import {ReservedAttendances} from "../../../Interfaces/ReservedAttendances";
-import {UserInterface} from "../../../Interfaces/userInterface";
+import {UserDAO} from "../../../api/auth";
 import {Moment} from "moment";
 
 interface IWeeklyCardViewProps {
     day: moment.Moment
-    user: UserInterface,
+    user: UserDAO,
     reservedAttendances: ReservedAttendances[],
     addNewAttendance: any
 }
@@ -121,7 +121,7 @@ const mapStateToProps = (state: StoreInteface) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        addNewAttendance: (time: moment.Moment, user: UserInterface) => dispatch(addNewAttendance(time, user))
+        addNewAttendance: (time: moment.Moment, user: UserDAO) => dispatch(addNewAttendance(time, user))
     }
 }
 

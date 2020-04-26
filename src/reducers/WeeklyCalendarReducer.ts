@@ -7,7 +7,7 @@ import {
     GET_CALENDAR_SUCCESS
 } from "../actions/actions.const";
 import {ReservedAttendances} from "../Interfaces/ReservedAttendances";
-import {WeeklyCalendarDao} from "../Interfaces/Dao/weeklyCalendarDao";
+import {WeeklyCalendarDao} from "../api/weeklyCalendars";
 
 
 export interface WeeklyCalendarReducerInterface extends WeeklyCalendarDao{
