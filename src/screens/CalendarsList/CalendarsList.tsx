@@ -84,7 +84,7 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                 <Button variant="contained" color="primary" onClick={this.handleLogout}>Logout</Button>
                             </div>
                             <div className={style.content}>
-                                <h2>Your calendars</h2>
+                                <h2>Your own calendars</h2>
                                 <div className={style.addCalendar}>
                                     <form>
                                         <div>
@@ -117,29 +117,33 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                         })
                                     }
                                 </div>
-                                <div>
-                                    <h2>Connected calendars</h2>
-                                    <div className={style.calendarsList}>
-                                        {
-                                            this.state.connectedWeeklyCalendars.map((calendar) => {
-                                                return (
-                                                    <div>
-                                                        <Card className={style.card}>
-                                                            <CardContent>
-                                                                <p>{calendar.name}</p>
-                                                            </CardContent>
-                                                            <CardActions>
-                                                                <Link to={`/calendar/${calendar._id}`}>
-                                                                    <Button size="small">View</Button>
-                                                                </Link>
-                                                            </CardActions>
-                                                        </Card>
-                                                    </div>
-                                                )
-                                            })
-                                        }
+                                {
+                                    this.state.connectedWeeklyCalendars.length > 0 &&
+                                    <div>
+                                        <h2>Connected calendars</h2>
+                                        <div className={style.calendarsList}>
+                                            {
+                                                this.state.connectedWeeklyCalendars.map((calendar) => {
+                                                    return (
+                                                        <div>
+                                                            <Card className={style.card}>
+                                                                <CardContent>
+                                                                    <p>{calendar.name}</p>
+                                                                </CardContent>
+                                                                <CardActions>
+                                                                    <Link to={`/calendar/${calendar._id}`}>
+                                                                        <Button size="small">View</Button>
+                                                                    </Link>
+                                                                </CardActions>
+                                                            </Card>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
                                     </div>
-                                </div>
+                                }
+
                             </div>
                         </div> :
                         <div>

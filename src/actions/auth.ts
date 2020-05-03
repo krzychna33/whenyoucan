@@ -5,13 +5,13 @@ import {
     getAuthMe,
     postLogin,
     postRegister,
-    UserDAO
+    UserDAO, postLoginFacebook, LoginFacebookDAO
 } from "../api/auth";
 import {
     GET_AUTH_ME_ERROR,
     GET_AUTH_ME_FETCH,
     GET_AUTH_ME_SUCCESS,
-    POST_LOGIN_ERROR,
+    POST_LOGIN_ERROR, POST_LOGIN_FACEBOOK_ERROR, POST_LOGIN_FACEBOOK_FETCH, POST_LOGIN_FACEBOOK_SUCCESS,
     POST_LOGIN_FETCH,
     POST_LOGIN_SUCCESS, POST_SIGNUP_ERROR,
     POST_SIGNUP_FETCH, POST_SIGNUP_SUCCESS,
@@ -127,3 +127,27 @@ export const startPostSignUp = (data: RegisterUserDto) => {
     }
 };
 
+export const postLoginFacebookFetch = () => ({
+    type: POST_LOGIN_FACEBOOK_FETCH
+});
+
+export const postLoginFacebookSuccess = () => ({
+    type: POST_LOGIN_FACEBOOK_SUCCESS
+});
+
+export const postLoginFacebookError = () => ({
+    type: POST_LOGIN_FACEBOOK_ERROR
+});
+
+export const startPostLoginFacebook = (access_token: string, user_id: string) => {
+    return (dispatch: any) => {
+        dispatch(postLoginFacebookFetch());
+        postLoginFacebook({access_token, user_id}).then((response: AxiosResponse<LoginFacebookDAO>) => {
+            localStorage.setItem('token', response.data.token);
+            dispatch(postLoginFacebookSuccess());
+        }).catch((e) => {
+            toast.error(e.data.message);
+            dispatch(postLoginFacebookError());
+        })
+    }
+}

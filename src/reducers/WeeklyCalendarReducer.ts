@@ -36,6 +36,7 @@ export default (state: WeeklyCalendarReducerInterface = weeklyCardReducerDefault
             return {
                 ...state,
                 ...action.data,
+                newAttendances: [],
                 isLoading: false
             };
         case GET_CALENDAR_ERROR:

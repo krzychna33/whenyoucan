@@ -3,7 +3,7 @@ import {
     GET_AUTH_ME_ERROR,
     GET_AUTH_ME_FETCH,
     GET_AUTH_ME_SUCCESS,
-    POST_LOGIN_ERROR,
+    POST_LOGIN_ERROR, POST_LOGIN_FACEBOOK_ERROR, POST_LOGIN_FACEBOOK_FETCH, POST_LOGIN_FACEBOOK_SUCCESS,
     POST_LOGIN_FETCH,
     POST_LOGIN_SUCCESS,
     POST_SIGNUP_ERROR,
@@ -28,12 +28,14 @@ const authReducerDefaultState: AuthReducerInterface = {
 
 export default (state: AuthReducerInterface = authReducerDefaultState, action: any) => {
     switch (action.type) {
+        case POST_LOGIN_FACEBOOK_FETCH:
         case POST_SIGNUP_FETCH:
         case POST_LOGIN_FETCH:
             return {
                 ...state,
                 isLoading: true
             };
+        case POST_LOGIN_FACEBOOK_SUCCESS:
         case POST_SIGNUP_SUCCESS:
         case SET_LOGGED_IN:
         case POST_LOGIN_SUCCESS:
@@ -42,6 +44,7 @@ export default (state: AuthReducerInterface = authReducerDefaultState, action: a
                 isLoading: false,
                 isAuthenticated: true
             };
+        case POST_LOGIN_FACEBOOK_ERROR:
         case POST_SIGNUP_ERROR:
         case POST_LOGIN_ERROR:
             return {

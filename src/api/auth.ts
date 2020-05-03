@@ -102,14 +102,18 @@ export interface LoginFacebookDTO {
     user_id: string
 }
 
+export interface LoginFacebookDAO extends LoginDAO {
+
+}
+
 export const postLoginFacebook = ({access_token, user_id}: LoginFacebookDTO) => {
     return new Promise((resolve, reject) => {
-        httpRequestHandler.post<RegisterUserDao>('/auth/facebook-login', {
+        httpRequestHandler.post<LoginFacebookDAO>('/auth/facebook-login', {
             access_token,
             user_id
-        }).then((response: AxiosResponse<any>) => {
+        }).then((response: AxiosResponse<LoginFacebookDAO>) => {
             resolve(response);
-        }).catch((e) => {
+        }).catch((e: AxiosError<ErrorDAO>) => {
             reject(e.response);
         })
     });

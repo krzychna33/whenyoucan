@@ -3,7 +3,7 @@ import {Button} from "@material-ui/core";
 import * as React from "react";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {startPostLogin} from "../../actions/auth";
+import {startPostLogin, startPostLoginFacebook} from "../../actions/auth";
 import * as style from "./style.scss"
 import {postLoginFacebook} from "../../api/auth";
 
@@ -22,10 +22,7 @@ export const LoginForm = () => {
             console.log(result)
             console.log(result.authResponse.accessToken)
             console.log(result.authResponse.userID)
-            postLoginFacebook({
-                access_token: result.authResponse.accessToken,
-                user_id: result.authResponse.userID
-            })
+            dispatch(startPostLoginFacebook(result.authResponse.accessToken, result.authResponse.userID));
         },{scope: 'public_profile,email,user_birthday'})
     }
 
