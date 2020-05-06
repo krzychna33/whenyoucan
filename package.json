@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
-    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "dev-server": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "build:server": "webpack --config webpack.prod.js && node server/server.js",
-    "server:start": "node server/server.js"
+    "start": "node server/server.js",
+    "heroku-postbuild": "npm run build"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +30,7 @@
     "classnames": "^2.2.6",
     "core-js": "^3.6.4",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
