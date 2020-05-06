@@ -1,6 +1,8 @@
 const merge = require('webpack-merge');
 const path = require('path');
 const common = require('./webpack.common');
+const Dotenv = require('dotenv-webpack');
+
 
 module.exports = merge(common, {
     watch: true,
@@ -17,5 +19,10 @@ module.exports = merge(common, {
         },
         contentBase: path.join(__dirname, 'public'),
         historyApiFallback: true
-    }
+    },
+    plugins: [
+        new Dotenv({
+            path: "./.env"
+        })
+    ]
 });

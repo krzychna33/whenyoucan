@@ -20,6 +20,7 @@ if (localStorage.token) {
     store.dispatch(setLoggedOut());
 }
 
+console.log(process.env.API_URL);
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
