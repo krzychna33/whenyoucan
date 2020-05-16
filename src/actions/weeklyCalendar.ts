@@ -1,5 +1,11 @@
 import * as moment from "moment";
-import {ADD_NEW_ATTENDANCE, GET_CALENDAR_ERROR, GET_CALENDAR_FETCH, GET_CALENDAR_SUCCESS} from "./actions.const";
+import {
+    ADD_NEW_ATTENDANCE,
+    CLEAR_NEW_ATTENDANCES,
+    GET_CALENDAR_ERROR,
+    GET_CALENDAR_FETCH,
+    GET_CALENDAR_SUCCESS
+} from "./actions.const";
 import {UserDAO} from "../api/auth";
 import {getWeeklyCalendar} from "../api/weeklyCalendars";
 import {WeeklyCalendarDao} from "../api/weeklyCalendars";
@@ -44,3 +50,9 @@ export const startGetCalendar = (id: string) => {
         })
     }
 };
+
+export const clearNewAttendances = () => (
+    {
+        type: CLEAR_NEW_ATTENDANCES
+    }
+)

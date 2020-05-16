@@ -26,9 +26,15 @@
     box-sizing: border-box;
     height: 40%;
     border-bottom: 1px solid #e0e0e0;
-    > h3 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    h3 {
         font-size: $font-size-ml;
         margin-bottom: 20px;
+    }
+    &__singleInfo {
+        margin-bottom: 10px;
     }
 }
 
@@ -56,4 +62,14 @@
         padding-right: 20px;
         box-sizing: border-box;
     }
+}
+
+.calendarUser {
+    background: #C2677B;
+    border-radius: 8px;
+    padding: 5px;
+    color: white;
+    margin-right: 10px;
+    display: inline-block;
+    margin-top: 6px;
 }

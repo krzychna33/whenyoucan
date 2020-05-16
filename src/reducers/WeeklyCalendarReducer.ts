@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import {Moment} from "moment";
 import {
-    ADD_NEW_ATTENDANCE,
+    ADD_NEW_ATTENDANCE, CLEAR_NEW_ATTENDANCES,
     GET_CALENDAR_ERROR,
     GET_CALENDAR_FETCH,
     GET_CALENDAR_SUCCESS
@@ -62,6 +62,11 @@ export default (state: WeeklyCalendarReducerInterface = weeklyCardReducerDefault
                     action.data.time
                 ]
             };
+        case CLEAR_NEW_ATTENDANCES:
+            return {
+                ...state,
+                newAttendances: []
+            }
         default:
             return state
     }

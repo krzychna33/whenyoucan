@@ -1,6 +1,7 @@
 import {httpRequestHandler} from "../utils/httpRequestHandler";
 import {ReservedAttendances} from "../Interfaces/ReservedAttendances";
-import {AxiosResponse} from "axios";
+import {AxiosError, AxiosPromise, AxiosResponse} from "axios";
+
 
 export const getWeeklyCalendars = () => {
     const token = localStorage.getItem('token')
@@ -100,3 +101,29 @@ export const getConnectedCalendars = () => {
         })
     });
 };
+
+export interface CalendarUser {
+    email: string,
+    firstName: string,
+    lastName: string,
+    _id: string
+}
+
+export interface CalendarUsersDAO {
+    results: CalendarUser[]
+}
+
+export const getCalendarUsers = (calendarId: string): AxiosPromise<CalendarUsersDAO> => {
+    const token = localStorage.getItem('token')
+    const options = {
+        headers: {"x-auth": `${token}`}
+    };
+
+    return new Promise( (resolve, reject) => {
+        httpRequestHandler.get<CalendarUsersDAO>(`weekly-calendars/${calendarId}/users`, options).then((response) => {
+            resolve(response);
+        }).catch((e) => {
+            reject(e.response);
+        })
+    });
+}

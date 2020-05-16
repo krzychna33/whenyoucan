@@ -7,8 +7,9 @@ import {StoreInteface} from "../../stores/configureStore";
 import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
 import {startGetAuthMe} from "../../actions/auth";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
-import {postPushAttendances} from "../../api/weeklyCalendars";
+import {CalendarUser, getCalendarUsers, postPushAttendances} from "../../api/weeklyCalendars";
 import {RouteComponentProps} from "react-router-dom"
+import {clearNewAttendances} from "../../actions/weeklyCalendar";
 
 interface MatchParams {
     id: string
@@ -20,27 +21,46 @@ interface ICalendarProps extends RouteComponentProps<MatchParams> {
 
     startGetAuthMe(): any,
 
+    clearNewAttendances(): any,
+
     authReducer: AuthReducerInterface
 }
 
-class Calendar extends React.Component<ICalendarProps> {
+interface ICalendarState {
+    calendarUsers: CalendarUser[]
+}
+
+class Calendar extends React.Component<ICalendarProps, ICalendarState> {
 
     constructor(props: ICalendarProps) {
         super(props);
+        this.state = {
+            calendarUsers: []
+        }
+
     }
 
     componentDidMount(): void {
+        const {id} = this.props.match.params;
+
         this.props.startGetAuthMe();
+        getCalendarUsers(id).then((response) => {
+            this.setState({calendarUsers: response.data.results})
+        })
     }
 
     pushAttendances = () => {
         const {id} = this.props.match.params;
         postPushAttendances(id, {
             times: this.props.weeklyCalendar.newAttendances
+        }).then(() => {
+            this.props.clearNewAttendances();
         });
     };
 
     render() {
+        const {weeklyCalendar, authReducer} = this.props;
+
         return (
             <React.Fragment>
                 {
@@ -50,14 +70,44 @@ class Calendar extends React.Component<ICalendarProps> {
                                 className={style.drawer}
                             >
                                 <div className={style.roomInfo}>
-                                    <h3>{this.props.weeklyCalendar.name}</h3>
-                                    <TextField id="outlined-basic" label="Invite URL" variant="outlined"
-                                               value={`${process.env.APP_URL}${this.props.location.pathname}/join`}/>
+                                    <div>
+                                        <h3>{weeklyCalendar.name}</h3>
+                                        <div className={style.roomInfo__singleInfo}>
+                                            <TextField
+                                                id="outlined-basic"
+                                                label="Invite URL"
+                                                variant="outlined"
+                                                value={`${process.env.APP_URL}${this.props.location.pathname}/join`}/>
+                                        </div>
+                                        {
+                                            weeklyCalendar.ownerId === authReducer.user._id &&
+                                            <div className={style.roomInfo__singleInfo}>
+                                                <TextField
+                                                    id="outlined-basic"
+                                                    label="PIN"
+                                                    variant="outlined"
+                                                    value={`${weeklyCalendar.pin}`}/>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <div>
+                                            {
+                                                this.state.calendarUsers.map((user) => (
+                                                    <span className={style.calendarUser}>
+                                                            {user.firstName} {user.lastName} {user._id === weeklyCalendar.ownerId &&
+                                                    <i className="far fa-star"></i>}
+                                                        </span>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div className={style.yourAttendance}>
                                     <h3>{this.props.authReducer.user.firstName}</h3>
                                     <div className={style.addedAttendances}>
-                                        <p>You have added {this.props.weeklyCalendar.newAttendances.length} attendance
+                                        <p>You have added {weeklyCalendar.newAttendances.length} attendance
                                             items.</p>
                                         <div>
                                             <Button variant="contained" color="primary" onClick={this.pushAttendances}>
@@ -93,6 +143,7 @@ const mapStateToProps = (state: StoreInteface) => {
 const mapDispatchToProps = (dispatch: any) => {
     return {
         startGetAuthMe: () => dispatch(startGetAuthMe()),
+        clearNewAttendances: () => dispatch(clearNewAttendances())
     }
 };
 
