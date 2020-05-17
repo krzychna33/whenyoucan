@@ -14,5 +14,13 @@
     > div {
         flex: 0 0 auto;
         width: 25%;
+
+        @include mediumLaptop {
+            width: 33%;
+        }
+    }
+
+    @include mediumLaptop {
+        width: 100vw;
     }
 }
