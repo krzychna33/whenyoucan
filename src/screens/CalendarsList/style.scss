@@ -21,6 +21,10 @@
     > h2 {
         margin-bottom: 20px;
     }
+
+    @include tablet {
+        padding: 40px 20px;
+    }
 }
 
 .addCalendar {
@@ -49,6 +53,10 @@
         padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 20px;
+
+        @include laptop {
+            width: 100%;
+        }
     }
 }
 
