@@ -18,6 +18,11 @@
     height: 70%;
     background-color: $color-dark;
     overflow: auto;
+    border-radius: 8px;
+    @include laptop {
+        width: 90%;
+        height: 80%;
+    }
 }
 
 .modalInnerContent{
@@ -38,6 +43,9 @@
     h1 {
         font-size: $font-size-xl;
         margin-bottom: 50px;
+        @include laptop {
+            font-size: $font-size-l
+        }
     }
 }
 

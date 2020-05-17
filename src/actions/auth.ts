@@ -48,6 +48,7 @@ export const startPostLogin = (email: string, password: string) => {
         }).catch((e) => {
             toast.error(e.data.message);
             dispatch(postLoginError());
+            alert(e.data.message)
         })
     }
 };

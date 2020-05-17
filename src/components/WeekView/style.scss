@@ -7,34 +7,6 @@
     box-sizing: border-box;
 }
 
-.bar {
-    position: relative;
-    height: 64px;
-    background-color: $color-dark;
-}
-
-.appToolbar {
-    width: 100%;
-    display: flex;
-    height: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding-left: 40px;
-    color: white;
-    box-sizing: border-box;
-    > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding-right: 40px;
-        > div {
-            box-sizing: border-box;
-            padding-right: 40px;
-        }
-    }
-}
-
 .weekView {
     height: 100%;
     display: flex;

@@ -8,8 +8,10 @@ import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReduc
 import {startGetAuthMe} from "../../actions/auth";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {CalendarUser, getCalendarUsers, postPushAttendances} from "../../api/weeklyCalendars";
-import {RouteComponentProps} from "react-router-dom"
+import {Link, RouteComponentProps} from "react-router-dom"
 import {clearNewAttendances, setUsersColors, startGetCalendar} from "../../actions/weeklyCalendar";
+import classNames = require("classnames");
+import {UtilsReducerInterface} from "../../reducers/UtilsReducer";
 
 interface MatchParams {
     id: string
@@ -22,7 +24,8 @@ interface ICalendarProps extends RouteComponentProps<MatchParams> {
     clearNewAttendances(): any,
     startGetCalendar(id: string): any
     setUsersColors(users: string[]): any
-    authReducer: AuthReducerInterface
+    authReducer: AuthReducerInterface,
+    utilsReducer: UtilsReducerInterface
 }
 
 interface ICalendarState {
@@ -31,12 +34,13 @@ interface ICalendarState {
 
 class Calendar extends React.Component<ICalendarProps, ICalendarState> {
 
+    private fixedApplyBtn = React.createRef<HTMLDivElement>();
+
     constructor(props: ICalendarProps) {
         super(props);
         this.state = {
             calendarUsers: []
         }
-
     }
 
     componentDidMount(): void {
@@ -50,6 +54,26 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
         })
     }
 
+    componentDidUpdate(prevProps: Readonly<ICalendarProps>, prevState: Readonly<ICalendarState>, snapshot?: any): void {
+        if (prevProps.weeklyCalendar.newAttendances.length !== this.props.weeklyCalendar.newAttendances.length) {
+            this.animateFixedApplyBtn();
+        }
+    }
+
+    private animateFixedApplyBtn = () => {
+        console.log(this.fixedApplyBtn.current)
+
+        this.fixedApplyBtn.current.classList.add("animated")
+        this.fixedApplyBtn.current.classList.add("pulse")
+        this.fixedApplyBtn.current.addEventListener("animationend", this.fixedApplyBtnHandleAnimationEnd)
+    }
+
+    private fixedApplyBtnHandleAnimationEnd = () => {
+        this.fixedApplyBtn.current.classList.remove("animated")
+        this.fixedApplyBtn.current.classList.remove("pulse")
+        this.fixedApplyBtn.current.removeEventListener("animationend", this.fixedApplyBtnHandleAnimationEnd)
+    }
+
     pushAttendances = () => {
         const {id} = this.props.match.params;
         postPushAttendances(id, {
@@ -60,7 +84,7 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
     };
 
     render() {
-        const {weeklyCalendar, authReducer} = this.props;
+        const {weeklyCalendar, authReducer, utilsReducer} = this.props;
 
         return (
             <React.Fragment>
@@ -68,59 +92,76 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                     !this.props.authReducer.isLoading && this.props.authReducer.user ?
                         <div className={style.container} style={{overflowX: 'hidden'}}>
                             <div
-                                className={style.drawer}
+                                className={classNames({
+                                    [style.drawer]: true,
+                                    [style.drawer__hidden]: !utilsReducer.isLeftMenuOpen
+                                })}
                             >
-                                <div className={style.roomInfo}>
-                                    <div>
-                                        <h3>{weeklyCalendar.name}</h3>
-                                        <div className={style.roomInfo__singleInfo}>
-                                            <TextField
-                                                id="outlined-basic"
-                                                label="Invite URL"
-                                                variant="outlined"
-                                                value={`${process.env.APP_URL}${this.props.location.pathname}/join`}/>
-                                        </div>
-                                        {
-                                            weeklyCalendar.ownerId === authReducer.user._id &&
+                                <div>
+                                    <div className={style.roomInfo}>
+                                        <div>
+                                            <h3>{weeklyCalendar.name}</h3>
                                             <div className={style.roomInfo__singleInfo}>
                                                 <TextField
                                                     id="outlined-basic"
-                                                    label="PIN"
+                                                    label="Invite URL"
                                                     variant="outlined"
-                                                    value={`${weeklyCalendar.pin}`}/>
+                                                    value={`${process.env.APP_URL}${this.props.location.pathname}/join`}/>
                                             </div>
-                                        }
-                                    </div>
-                                    <div>
-                                        <div>
                                             {
-                                                this.state.calendarUsers.map((user, index) => (
-                                                    <span
-                                                        key={index}
-                                                        className={style.calendarUser}
-                                                        style={{backgroundColor: weeklyCalendar.usersColors[user._id]}}
-                                                    >
-                                                            {user.firstName} {user.lastName} {user._id === weeklyCalendar.ownerId &&
-                                                    <i className="far fa-star"></i>}
-                                                        </span>
-                                                ))
+                                                weeklyCalendar.ownerId === authReducer.user._id &&
+                                                <div className={style.roomInfo__singleInfo}>
+                                                    <TextField
+                                                        id="outlined-basic"
+                                                        label="PIN"
+                                                        variant="outlined"
+                                                        value={`${weeklyCalendar.pin}`}/>
+                                                </div>
                                             }
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div className={style.yourAttendance}>
-                                    <h3>{this.props.authReducer.user.firstName}</h3>
-                                    <div className={style.addedAttendances}>
-                                        <p>You have added {weeklyCalendar.newAttendances.length} attendance
-                                            items.</p>
                                         <div>
-                                            <Button variant="contained" color="primary" onClick={this.pushAttendances}>
-                                                Apply
-                                            </Button>
+                                            <div>
+                                                {
+                                                    this.state.calendarUsers.map((user, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className={style.calendarUser}
+                                                            style={{backgroundColor: weeklyCalendar.usersColors[user._id]}}
+                                                        >
+                                                            {user.firstName} {user.lastName} {user._id === weeklyCalendar.ownerId &&
+                                                        <i className="far fa-star"></i>}
+                                                        </span>
+                                                    ))
+                                                }
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div className={style.yourAttendance}>
+                                        <h3>{this.props.authReducer.user.firstName}</h3>
+                                        <div className={style.addedAttendances}>
+                                            <p>You have added {weeklyCalendar.newAttendances.length} attendance
+                                                items.</p>
+                                            <div>
+                                                <Button variant="contained" color="primary" onClick={this.pushAttendances}>
+                                                    Apply
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={style.links}>
+                                        <Link to={"/calendars"}><p><i className="fas fa-chevron-circle-right"/>Back to Calendars List</p></Link>
+                                    </div>
                                 </div>
+                            </div>
+                            <div
+                                ref={this.fixedApplyBtn}
+                                className={classNames({
+                                    [style.applyAttendance]: true
+                                })}
+                                onClick={this.pushAttendances}
+                            >
+                                Apply ({weeklyCalendar.newAttendances.length})
                             </div>
                             <main
                                 className={style.content}
@@ -141,7 +182,8 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
 const mapStateToProps = (state: StoreInteface) => {
     return {
         authReducer: state.authReducer,
-        weeklyCalendar: state.weeklyCalendar
+        weeklyCalendar: state.weeklyCalendar,
+        utilsReducer: state.utilsReducer
     }
 };
 

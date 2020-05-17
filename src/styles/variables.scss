@@ -11,3 +11,48 @@ $color-highlighted: #AB304A;
 $color-highlighted-dark: #80263d;
 $color-highlighted-light: #C2677B;
 $color-light: #BBC4CC;
+
+$screen-ss: 375px; // Super small screen / smphones
+$screen-xs: 480px; // Extra small screen / phones
+$screen-sm: 768px; // Small screen / tablet
+$screen-md: 992px; // Medium screen / laptop
+$screen-ml : 1200px; //Medium large / medium laptop
+$screen-lg: 1440px; // Large screen / desktop
+$screen-xl: 1600px; // Very large screen / widedesktop
+
+@mixin widedesktop {
+  @media screen and (max-width: $screen-xl) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media screen and (max-width: $screen-lg) {
+    @content;
+  }
+}
+@mixin mediumLaptop {
+  @media screen and (max-width: $screen-ml) {
+    @content;
+  }
+}
+@mixin laptop {
+  @media screen and (max-width: $screen-md) {
+    @content;
+  }
+}
+@mixin tablet {
+  @media screen and (max-width: $screen-sm) {
+    @content;
+  }
+}
+@mixin phones {
+  @media screen and (max-width: $screen-xs) {
+    @content;
+  }
+}
+@mixin smphones {
+  @media screen and (max-width: $screen-ss) {
+    @content;
+  }
+}

@@ -9,6 +9,7 @@ import {StoreInteface} from "../../stores/configureStore";
 import {ReservedAttendances} from "../../Interfaces/ReservedAttendances";
 import {withRouter, RouteComponentProps, Link} from "react-router-dom";
 import {Moment} from "moment";
+import {CalendarViewHeader} from "../CalendarViewHeader/CalendarViewHeader";
 
 interface MatchParams {
     id: string
@@ -105,28 +106,11 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
     render() {
         return (
             <div className={style.container}>
-                <div
-                    className={style.bar}
-                >
-                    <div className={style.appToolbar}>
-                        <div>
-                            <div>
-                                <Button variant="contained" onClick={this.decreaseOffset} color={"primary"}>PREVIOUS WEEK</Button>
-                            </div>
-                            <div>
-                                {
-                                    this.state.weekPointer.format("MMMM YYYY")
-                                }
-                            </div>
-                            <div>
-                                <Button variant="contained" onClick={this.increaseOffset} color={"primary"}>NEXT WEEK</Button>
-                            </div>
-                        </div>
-                        <div>
-                            <Link to={"/calendars"}>Back to calendars list</Link>
-                        </div>
-                    </div>
-                </div>
+                <CalendarViewHeader
+                    decreaseOffset={this.decreaseOffset}
+                    increaseOffset={this.increaseOffset}
+                    weekPointer={this.state.weekPointer}
+                />
                 <div className={style.weekView}>
                     {this.renderDays()}
                 </div>

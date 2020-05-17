@@ -1,0 +1,73 @@
+@import "../../styles/variables";
+
+.bar {
+  position: relative;
+  height: 64px;
+  background-color: $color-dark;
+}
+
+
+.appToolbar {
+  width: 100%;
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 40px;
+  color: white;
+  box-sizing: border-box;
+  @include mediumLaptop() {
+    width: 100vw;
+    padding-left: 20px;
+  }
+}
+
+.menuSwitcher {
+  display: none;
+  font-size: 25px;
+  width: 10%;
+  @include mediumLaptop {
+    display: block;
+  }
+}
+
+.appNav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 40px;
+  @include mediumLaptop {
+    padding-right: 20px;
+    display: none;
+  }
+}
+.prevButton {
+  transform: rotate(180deg);
+}
+
+.weekNav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 40px;
+  width: 70%;
+  justify-content: center;
+
+  button {
+    font-size: 25px;
+    background: transparent;
+  }
+
+  > div {
+    &:not(:last-child) {
+      margin-right: 15px;
+
+    }
+  }
+
+  @include mediumLaptop {
+    width: 90%;
+    padding-right: 20px;
+  }
+}
