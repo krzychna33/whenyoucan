@@ -18,6 +18,10 @@
         @include mediumLaptop {
             width: 33%;
         }
+
+        @include phones {
+            width: 50%;
+        }
     }
 
     @include mediumLaptop {
