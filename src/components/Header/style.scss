@@ -12,6 +12,25 @@
   }
 }
 
+.logoDesktop {
+  font-family: 'Bebas Neue', cursive;
+  display: block;
+  letter-spacing: 1px;
+
+  @include mediumLaptop {
+    display: none;
+  }
+}
+
+.logoMobile {
+  font-family: 'Bebas Neue', cursive;
+  display: none;
+  letter-spacing: 1px;
+  @include mediumLaptop {
+    display: block;
+  }
+}
+
 .nav {
   display: flex;
   align-items: center;

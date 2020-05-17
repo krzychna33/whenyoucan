@@ -22,7 +22,8 @@ export const Header: React.FC = () => {
 
     return (
         <div className={style.header}>
-            <Link to={"/"}><h1>WyC</h1></Link>
+            <Link to={"/"} className={style.logoDesktop}><h1>WhenYouCan.app</h1></Link>
+            <Link to={"/"} className={style.logoMobile}><h1>WHEN</h1></Link>
             {
                 authReducer.user ?
                     <ul className={style.nav}>
