@@ -12,17 +12,24 @@ import {getWeeklyCalendar, postJoinCalendar} from "../../api/weeklyCalendars";
 import classNames = require("classnames");
 import {AuthModal} from "../../components/AuthModal/AuthModal";
 import {toast} from "react-toastify";
-import {Link} from "react-router-dom";
+import {Link, withRouter, RouteComponentProps} from "react-router-dom";
+import {StyledInput} from "../../components/StyledInput/StyledInput";
+import {Header} from "../../components/Header/Header";
+
+interface IJoinCalendarProps extends RouteComponentProps {
+
+}
 
 interface IPublicCalendar {
     _id: string,
     name: string
 }
 
-const JoinCalendar = (props: any) => {
+const JoinCalendar: React.FC<IJoinCalendarProps> = (props: any) => {
 
-    const authReducer: AuthReducerInterface = useSelector((store: StoreInteface) => store.authReducer);
     const [calendar, setCalendar] = useState<IPublicCalendar>({_id: undefined, name: undefined})
+    const [pin, setPin] = useState("");
+    const authReducer: AuthReducerInterface = useSelector((store: StoreInteface) => store.authReducer);
     const dispatch = useDispatch();
 
     const { match } = props;
@@ -37,31 +44,22 @@ const JoinCalendar = (props: any) => {
     }, []);
 
     const joinCalendar = () => {
-        postJoinCalendar(id, "1234").then((response: any) => {
+        postJoinCalendar(id, pin).then((response: any) => {
             if(response.status === 200) {
-                alert("Joined");
+                toast.success("Succesfully joined to calendar")
+                props.history.push("/calendars")
             }
         }).catch((e) => {
             toast.error(e.data.message || "Unhandled error");
         })
     };
 
-    const handleLogout = () => {
-        dispatch(startLogout());
-    }
-
     return (
         <React.Fragment>
             {
                  calendar._id ?
                     <div className={style.wrapper}>
-                        <div className={style.header}>
-                            <Link to={"/"}><h1>WhenYouCan.app</h1></Link>
-                            {
-                                authReducer.user && <Button variant="contained" color="primary" onClick={handleLogout}>Logout</Button>
-                            }
-
-                        </div>
+                        <Header/>
                         <div className={style.container}>
                             <div className={style.content}>
                                 <h2>Hi {authReducer.user ? authReducer.user.firstName : "guest"}!</h2>
@@ -76,7 +74,14 @@ const JoinCalendar = (props: any) => {
                                     [style.calendarJoin]: true,
                                     [style.calendarJoin__guest]: !authReducer.user
                                 })}>
-                                    <h3>Join {calendar.name}!</h3>
+                                    <h3>Provide PIN & Join <span>{calendar.name}</span></h3>
+                                    <StyledInput
+                                        color="secondary"
+                                        value={pin}
+                                        label="PIN"
+                                        required
+                                        type={"password"}
+                                        onChange={(e) => {setPin(e.target.value)}}/>
                                     <Button variant="contained" color="primary"
                                             onClick={joinCalendar}>JOIN</Button>
                                 </div>
@@ -93,4 +98,4 @@ const JoinCalendar = (props: any) => {
     )
 };
 
-export default JoinCalendar;
+export default withRouter(JoinCalendar);

@@ -1,0 +1,28 @@
+@import "../../styles/variables";
+
+.header {
+  background-color: $color-dark;
+  width: 100%;
+  padding: 20px 40px 20px 20px;
+  display: flex;
+  justify-content: space-between;
+  h1 {
+    font-size: $font-size-l;
+    color: white;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  > li {
+    &:not(:last-child) {
+      padding-right: 20px;
+    }
+  }
+}
+
+.hiUser {
+  color: white;
+}

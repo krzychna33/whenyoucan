@@ -8,6 +8,7 @@ import {Link, RouteComponentProps} from "react-router-dom";
 import {getConnectedCalendars, getWeeklyCalendars, postCreateCalendar} from "../../api/weeklyCalendars";
 import * as style from "./style.scss"
 import {WeeklyCalendarDao} from "../../api/weeklyCalendars";
+import {Header} from "../../components/Header/Header";
 
 interface ICalendarsListProps extends RouteComponentProps {
     auth: AuthReducerInterface,
@@ -33,7 +34,6 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
     }
 
     componentDidMount(): void {
-        this.props.startGetAuthMe();
         getWeeklyCalendars().then((response: any) => {
             if (response.status === 200) {
                 this.setState(
@@ -76,13 +76,10 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
         const {auth} = this.props;
         return (
             <React.Fragment>
+                <Header/>
                 {
                     !auth.isLoading && auth.user ?
                         <div className={style.container}>
-                            <div className={style.topBar}>
-                                <h3>Hi {auth.user.firstName}!</h3>
-                                <Button variant="contained" color="primary" onClick={this.handleLogout}>Logout</Button>
-                            </div>
                             <div className={style.content}>
                                 <h2>Your own calendars</h2>
                                 <div className={style.addCalendar}>

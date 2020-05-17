@@ -1,0 +1,46 @@
+@import "../../styles/variables";
+
+.hiUser {
+  position: relative;
+}
+
+.trigger {
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.attachedModal {
+  position: absolute;
+  margin-left: -80px;
+  z-index: 20;
+  top: 220%;
+  right: 0;
+  background: $color-light;
+  width: 180px;
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 200ms linear;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: 10%;
+    margin-left: -5px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent $color-light transparent;
+  }
+  > button {
+    width: 100%;
+  }
+
+  &__hidden {
+    display: none;
+  }
+
+  &__visualHidden {
+    opacity: 0;
+  }
+}
