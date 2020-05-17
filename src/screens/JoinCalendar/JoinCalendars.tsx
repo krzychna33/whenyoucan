@@ -38,7 +38,6 @@ const JoinCalendar: React.FC<IJoinCalendarProps> = (props: any) => {
     useEffect(() => {
         dispatch(startGetAuthMe());
         getWeeklyCalendar(id).then((response: any) => {
-            console.log(response.data)
             setCalendar(response.data)
         })
     }, []);

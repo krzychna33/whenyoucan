@@ -90,7 +90,13 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
 
 
             days.push(
-                <WeeklyCardView day={dayCopy} reservedAttendances={dataToSend} usersColors={this.props.weeklyCalendar.usersColors}/>
+                <WeeklyCardView
+                    key={i}
+                    day={dayCopy}
+                    reservedAttendances={dataToSend}
+                    usersColors={this.props.weeklyCalendar.usersColors}
+                    usersCount={this.props.weeklyCalendar.users.length}
+                />
             )
         }
         return days;

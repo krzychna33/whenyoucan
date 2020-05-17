@@ -67,7 +67,6 @@ export const setUsersColors = (users: string[]) => {
     users.forEach(user => {
         usersColors[user] = getRandomColor()
     })
-    console.log("mojej")
 
     return {
         type: SET_USERS_COLORS,

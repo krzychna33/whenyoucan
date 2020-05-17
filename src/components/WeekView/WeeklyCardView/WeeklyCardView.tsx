@@ -9,13 +9,15 @@ import {ReservedAttendances} from "../../../Interfaces/ReservedAttendances";
 import {UserDAO} from "../../../api/auth";
 import {Moment} from "moment";
 import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
+import classNames = require("classnames");
 
 interface IWeeklyCardViewProps {
     day: moment.Moment
     user: UserDAO,
     reservedAttendances: ReservedAttendances[],
     addNewAttendance: any,
-    usersColors: UsersColors
+    usersColors: UsersColors,
+    usersCount: number
 }
 
 class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
@@ -27,23 +29,28 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
     renderHours = (): Array<any> => {
         const hoursArray: Array<any> = [];
         const hour = this.props.day.clone();
+        const {usersCount} = this.props;
         hour.minutes(0);
         hour.seconds(0);
-        for (let i: number = 0; i<24; i++) {
+        for (let i: number = 0; i < 24; i++) {
             const hourHook = hour.clone();
             let isSame = false;
             const reservedElements: any = [];
             let hasOwnAttendance = false;
-            this.props.reservedAttendances.forEach((reservedTime: any) => {
+            let hourUsers = 0;
+            this.props.reservedAttendances.forEach((reservedTime: any, index) => {
                 reservedTime.times.forEach((time: string) => {
                     const parsedTime: Moment = moment(time);
                     if (parsedTime.isSame(hour)) {
                         isSame = true;
+                        hourUsers++;
                         if (reservedTime.user._id === this.props.user._id) {
                             hasOwnAttendance = true;
                         }
                         reservedElements.push(
-                            <div className={style.reservationElement}>
+                            <div
+                                key={"_" + index}
+                                className={style.reservationElement}>
                                 <div
                                     className={style.reservationElement__userLetter}
                                     style={{backgroundColor: this.props.usersColors[reservedTime.user._id]}}
@@ -51,7 +58,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                     <div className={style.userName}>
                                         {reservedTime.user.firstName}
                                     </div>
-                                    {reservedTime.user.firstName.substr(0,1)}
+                                    {reservedTime.user.firstName.substr(0, 1)}
                                 </div>
                             </div>
                         )
@@ -60,10 +67,12 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
             });
             if (!hasOwnAttendance) {
                 reservedElements.push(
-                    <div className={style.addNewReservation}
-                         onClick={() => {
-                             this.props.addNewAttendance(hourHook, this.props.user)
-                         }}
+                    <div
+                        key={i}
+                        className={style.addNewReservation}
+                        onClick={() => {
+                            this.props.addNewAttendance(hourHook, this.props.user)
+                        }}
                     >
                         <AddCircleIcon/>
                     </div>
@@ -72,8 +81,13 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
 
 
             hoursArray.push(
-                <div className={style.dailyHour}>
-                    <div>
+                <div
+                    key={i}
+                    className={style.dailyHour}
+                >
+                    <div className={classNames({
+                        [style.goodHour]: hourUsers === usersCount
+                    })}>
                         {
                             hour.format("HH:mm")
                         }

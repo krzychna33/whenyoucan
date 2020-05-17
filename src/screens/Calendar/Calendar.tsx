@@ -43,7 +43,6 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
         const {id} = this.props.match.params;
         this.props.startGetCalendar(id).then(() => {
             this.props.setUsersColors(this.props.weeklyCalendar.users);
-            console.log("XDD")
         });
         this.props.startGetAuthMe();
         getCalendarUsers(id).then((response) => {
@@ -95,8 +94,9 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                     <div>
                                         <div>
                                             {
-                                                this.state.calendarUsers.map((user) => (
+                                                this.state.calendarUsers.map((user, index) => (
                                                     <span
+                                                        key={index}
                                                         className={style.calendarUser}
                                                         style={{backgroundColor: weeklyCalendar.usersColors[user._id]}}
                                                     >
