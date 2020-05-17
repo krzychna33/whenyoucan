@@ -7,7 +7,6 @@ import {connect} from "react-redux"
 import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
 import {StoreInteface} from "../../stores/configureStore";
 import {ReservedAttendances} from "../../Interfaces/ReservedAttendances";
-import {startGetCalendar} from "../../actions/weeklyCalendar";
 import {withRouter, RouteComponentProps, Link} from "react-router-dom";
 import {Moment} from "moment";
 
@@ -21,8 +20,7 @@ interface IWeekViewState {
 }
 
 interface IWeekViewProps extends RouteComponentProps<MatchParams>{
-    weeklyCalendar: WeeklyCalendarReducerInterface,
-    startGetCalendar(id: string): any
+    weeklyCalendar: WeeklyCalendarReducerInterface
 }
 
 class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
@@ -33,11 +31,6 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
             offset: 0,
             weekPointer: moment().startOf("week").add(1, 'day')
         }
-    }
-
-    componentDidMount(): void {
-        const {id} = this.props.match.params;
-        this.props.startGetCalendar(id);
     }
 
 
@@ -97,7 +90,7 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
 
 
             days.push(
-                <WeeklyCardView day={dayCopy} reservedAttendances={dataToSend}/>
+                <WeeklyCardView day={dayCopy} reservedAttendances={dataToSend} usersColors={this.props.weeklyCalendar.usersColors}/>
             )
         }
         return days;
@@ -142,10 +135,5 @@ const mapStateToProps = (state: StoreInteface) => {
     }
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        startGetCalendar: (id: string) => dispatch(startGetCalendar(id))
-    }
-};
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WeekView));
+export default withRouter(connect(mapStateToProps)(WeekView));

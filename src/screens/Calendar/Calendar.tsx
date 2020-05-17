@@ -9,7 +9,7 @@ import {startGetAuthMe} from "../../actions/auth";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {CalendarUser, getCalendarUsers, postPushAttendances} from "../../api/weeklyCalendars";
 import {RouteComponentProps} from "react-router-dom"
-import {clearNewAttendances} from "../../actions/weeklyCalendar";
+import {clearNewAttendances, setUsersColors, startGetCalendar} from "../../actions/weeklyCalendar";
 
 interface MatchParams {
     id: string
@@ -18,11 +18,10 @@ interface MatchParams {
 interface ICalendarProps extends RouteComponentProps<MatchParams> {
     classes: any,
     weeklyCalendar: WeeklyCalendarReducerInterface,
-
     startGetAuthMe(): any,
-
     clearNewAttendances(): any,
-
+    startGetCalendar(id: string): any
+    setUsersColors(users: string[]): any
     authReducer: AuthReducerInterface
 }
 
@@ -42,7 +41,10 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
 
     componentDidMount(): void {
         const {id} = this.props.match.params;
-
+        this.props.startGetCalendar(id).then(() => {
+            this.props.setUsersColors(this.props.weeklyCalendar.users);
+            console.log("XDD")
+        });
         this.props.startGetAuthMe();
         getCalendarUsers(id).then((response) => {
             this.setState({calendarUsers: response.data.results})
@@ -94,7 +96,10 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                         <div>
                                             {
                                                 this.state.calendarUsers.map((user) => (
-                                                    <span className={style.calendarUser}>
+                                                    <span
+                                                        className={style.calendarUser}
+                                                        style={{backgroundColor: weeklyCalendar.usersColors[user._id]}}
+                                                    >
                                                             {user.firstName} {user.lastName} {user._id === weeklyCalendar.ownerId &&
                                                     <i className="far fa-star"></i>}
                                                         </span>
@@ -143,7 +148,9 @@ const mapStateToProps = (state: StoreInteface) => {
 const mapDispatchToProps = (dispatch: any) => {
     return {
         startGetAuthMe: () => dispatch(startGetAuthMe()),
-        clearNewAttendances: () => dispatch(clearNewAttendances())
+        clearNewAttendances: () => dispatch(clearNewAttendances()),
+        startGetCalendar: (id: string) => dispatch(startGetCalendar(id)),
+        setUsersColors: (users: string[]) => dispatch(setUsersColors(users))
     }
 };
 

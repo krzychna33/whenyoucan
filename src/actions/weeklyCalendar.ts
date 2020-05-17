@@ -4,12 +4,15 @@ import {
     CLEAR_NEW_ATTENDANCES,
     GET_CALENDAR_ERROR,
     GET_CALENDAR_FETCH,
-    GET_CALENDAR_SUCCESS
+    GET_CALENDAR_SUCCESS,
+    SET_USERS_COLORS
 } from "./actions.const";
 import {UserDAO} from "../api/auth";
 import {getWeeklyCalendar} from "../api/weeklyCalendars";
 import {WeeklyCalendarDao} from "../api/weeklyCalendars";
 import {AxiosResponse} from "../Interfaces/AxiosResponse";
+import {getRandomColor} from "../utils/utils";
+import {UsersColors} from "../reducers/WeeklyCalendarReducer";
 
 
 export const addNewAttendance = (time: moment.Moment, user: UserDAO) => {
@@ -56,3 +59,18 @@ export const clearNewAttendances = () => (
         type: CLEAR_NEW_ATTENDANCES
     }
 )
+
+
+
+export const setUsersColors = (users: string[]) => {
+    let usersColors: UsersColors = {}
+    users.forEach(user => {
+        usersColors[user] = getRandomColor()
+    })
+    console.log("mojej")
+
+    return {
+        type: SET_USERS_COLORS,
+        data: usersColors
+    }
+}

@@ -4,15 +4,20 @@ import {
     ADD_NEW_ATTENDANCE, CLEAR_NEW_ATTENDANCES,
     GET_CALENDAR_ERROR,
     GET_CALENDAR_FETCH,
-    GET_CALENDAR_SUCCESS
+    GET_CALENDAR_SUCCESS, SET_USERS_COLORS
 } from "../actions/actions.const";
 import {ReservedAttendances} from "../Interfaces/ReservedAttendances";
 import {WeeklyCalendarDao} from "../api/weeklyCalendars";
 
 
+export interface UsersColors {
+    [key: string]: string
+}
+
 export interface WeeklyCalendarReducerInterface extends WeeklyCalendarDao{
     isLoading: boolean,
     newAttendances: Array<Moment>
+    usersColors: UsersColors;
 }
 
 const weeklyCardReducerDefaultState: WeeklyCalendarReducerInterface = {
@@ -22,7 +27,8 @@ const weeklyCardReducerDefaultState: WeeklyCalendarReducerInterface = {
     ownerId: "",
     isLoading: false,
     reservedAttendances: [],
-    newAttendances: []
+    newAttendances: [],
+    usersColors: {}
 };
 
 export default (state: WeeklyCalendarReducerInterface = weeklyCardReducerDefaultState, action: any) => {
@@ -66,6 +72,11 @@ export default (state: WeeklyCalendarReducerInterface = weeklyCardReducerDefault
             return {
                 ...state,
                 newAttendances: []
+            }
+        case SET_USERS_COLORS:
+            return {
+                ...state,
+                usersColors: action.data
             }
         default:
             return state

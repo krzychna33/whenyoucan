@@ -8,12 +8,14 @@ import {addNewAttendance} from "../../../actions/weeklyCalendar";
 import {ReservedAttendances} from "../../../Interfaces/ReservedAttendances";
 import {UserDAO} from "../../../api/auth";
 import {Moment} from "moment";
+import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
 
 interface IWeeklyCardViewProps {
     day: moment.Moment
     user: UserDAO,
     reservedAttendances: ReservedAttendances[],
-    addNewAttendance: any
+    addNewAttendance: any,
+    usersColors: UsersColors
 }
 
 class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
@@ -44,6 +46,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                             <div className={style.reservationElement}>
                                 <div
                                     className={style.reservationElement__userLetter}
+                                    style={{backgroundColor: this.props.usersColors[reservedTime.user._id]}}
                                 >
                                     <div className={style.userName}>
                                         {reservedTime.user.firstName}

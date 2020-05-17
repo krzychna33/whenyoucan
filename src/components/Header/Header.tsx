@@ -9,7 +9,6 @@ import {StoreInteface} from "../../stores/configureStore";
 import {AuthModal} from "../AuthModal/AuthModal";
 import {HiUser} from "../HiUser/HiUser";
 import {useEffect, useState} from "react";
-import {getAuthMe} from "../../api/auth";
 
 
 export const Header: React.FC = () => {
