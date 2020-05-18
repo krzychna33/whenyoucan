@@ -44,9 +44,6 @@ export const CalendarViewHeader: React.FC<ICalendarViewHeader> = (props: ICalend
                         </Button>
                     </div>
                 </div>
-                <div className={style.appNav}>
-                    <Link to={"/calendars"}>Back to calendars list</Link>
-                </div>
             </div>
         </div>
     )

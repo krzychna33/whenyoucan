@@ -4,7 +4,11 @@
   position: relative;
   height: 64px;
   background-color: $color-dark;
-  width: 100vw;
+  width: calc(100vw - 320px);
+
+  @include mediumLaptop {
+    width: 100vw;
+  }
 }
 
 
@@ -52,7 +56,7 @@
   flex-direction: row;
   align-items: center;
   padding-right: 40px;
-  width: 70%;
+  width: 100%;
   justify-content: center;
 
   button {
