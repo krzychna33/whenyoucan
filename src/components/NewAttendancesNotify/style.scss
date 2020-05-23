@@ -1,0 +1,15 @@
+@import "../../styles/variables";
+
+
+.container {
+  padding: 20px 15px 10px 15px;
+  > h4 {
+    font-size: $font-size-m;
+    color: black;
+  }
+
+  > div {
+    padding-top: 20px;
+    text-align: right;
+  }
+}

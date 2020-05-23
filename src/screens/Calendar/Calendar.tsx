@@ -12,6 +12,10 @@ import {Link, RouteComponentProps} from "react-router-dom"
 import {clearNewAttendances, setUsersColors, startGetCalendar} from "../../actions/weeklyCalendar";
 import classNames = require("classnames");
 import {UtilsReducerInterface} from "../../reducers/UtilsReducer";
+import {subscribeToAttendanceEvent} from "../../sockets/calendar";
+import {toast, Slide} from "react-toastify";
+import {NewAttendancesNotify} from "../../components/NewAttendancesNotify/NewAttendacnesNotify";
+
 
 interface MatchParams {
     id: string
@@ -20,16 +24,23 @@ interface MatchParams {
 interface ICalendarProps extends RouteComponentProps<MatchParams> {
     classes: any,
     weeklyCalendar: WeeklyCalendarReducerInterface,
+
     startGetAuthMe(): any,
+
     clearNewAttendances(): any,
+
     startGetCalendar(id: string): any
+
     setUsersColors(users: string[]): any
+
     authReducer: AuthReducerInterface,
     utilsReducer: UtilsReducerInterface
 }
 
 interface ICalendarState {
-    calendarUsers: CalendarUser[]
+    calendarUsers: CalendarUser[],
+    newAttendancesNotify: boolean,
+    shouldRefresh: boolean
 }
 
 class Calendar extends React.Component<ICalendarProps, ICalendarState> {
@@ -39,7 +50,9 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
     constructor(props: ICalendarProps) {
         super(props);
         this.state = {
-            calendarUsers: []
+            calendarUsers: [],
+            newAttendancesNotify: false,
+            shouldRefresh: false
         }
     }
 
@@ -48,7 +61,33 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
         this.props.startGetCalendar(id).then(() => {
             this.props.setUsersColors(this.props.weeklyCalendar.users);
         });
-        this.props.startGetAuthMe();
+        this.props.startGetAuthMe().then(() => {
+            subscribeToAttendanceEvent({
+                userId: this.props.authReducer.user._id,
+                calendarId: id
+            }, () => {
+                if (!this.state.newAttendancesNotify) {
+                    this.setState({newAttendancesNotify: true})
+                    toast(
+                        <NewAttendancesNotify onRefresh={() => {
+                            this.props.startGetCalendar(id).then(() => {
+                                this.setState({shouldRefresh: false})
+                            })
+                        }}/>,
+                        {
+                            transition: Slide,
+                            position: "top-center",
+                            hideProgressBar: true,
+                            className: style.toastStyle,
+                            autoClose: 5000,
+                            onClose: () => {
+                                this.setState({newAttendancesNotify: false})
+                            }
+                        });
+                }
+                this.setState({shouldRefresh: true})
+            })
+        });
         getCalendarUsers(id).then((response) => {
             this.setState({calendarUsers: response.data.results})
         })
@@ -100,7 +139,20 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                 <div>
                                     <div className={style.roomInfo}>
                                         <div>
-                                            <h3>{weeklyCalendar.name}</h3>
+                                            <div className={style.roomInfoHeader}>
+                                                <h3>{weeklyCalendar.name}</h3>
+                                                <i className={classNames({
+                                                    ["fas fa-sync-alt"]: true,
+                                                    ["animated pulse infinite"]: this.state.shouldRefresh
+                                                })}
+                                                onClick={() => {
+                                                    const {id} = this.props.match.params;
+                                                    this.props.startGetCalendar(id).then(() => {
+                                                        this.setState({shouldRefresh: false})
+                                                    })
+                                                }}
+                                                />
+                                            </div>
                                             <div className={style.roomInfo__singleInfo}>
                                                 <TextField
                                                     id="outlined-basic"
@@ -143,14 +195,16 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                             <p>You have added {weeklyCalendar.newAttendances.length} attendance
                                                 items.</p>
                                             <div>
-                                                <Button variant="contained" color="primary" onClick={this.pushAttendances}>
+                                                <Button variant="contained" color="primary"
+                                                        onClick={this.pushAttendances}>
                                                     Apply
                                                 </Button>
                                             </div>
                                         </div>
                                     </div>
                                     <div className={style.links}>
-                                        <Link to={"/calendars"}><p><i className="fas fa-chevron-circle-right"/>Back to Calendars List</p></Link>
+                                        <Link to={"/calendars"}><p><i className="fas fa-chevron-circle-right"/>Back to
+                                            Calendars List</p></Link>
                                     </div>
                                 </div>
                             </div>

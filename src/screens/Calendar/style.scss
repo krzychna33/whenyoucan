@@ -44,6 +44,15 @@
 
 }
 
+.roomInfoHeader {
+    display: flex;
+    justify-content: space-between;
+    i {
+        cursor: pointer;
+        font-size: 1.4rem;
+    }
+}
+
 .roomInfo {
     flex-grow: 4;
     width: 100%;
@@ -140,5 +149,12 @@
     @include mediumLaptop {
         bottom: 20px;
         right: 20px;
+    }
+}
+
+.toastStyle {
+    width: 500px;
+    @include phones {
+        width: 100vw;
     }
 }
