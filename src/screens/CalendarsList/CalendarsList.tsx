@@ -5,12 +5,21 @@ import {connect} from "react-redux";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {Button, Card, CardActions, CardContent, TextField} from "@material-ui/core";
 import {Link, RouteComponentProps} from "react-router-dom";
-import {getConnectedCalendars, getWeeklyCalendars, postCreateCalendar} from "../../api/weeklyCalendars";
+import {
+    deleteCalendar,
+    DeleteCalendarResponse,
+    getConnectedCalendars,
+    getWeeklyCalendars,
+    postCreateCalendar, postDisconnectCalendar
+} from "../../api/weeklyCalendars";
 import * as style from "./style.scss"
 import {WeeklyCalendarDao} from "../../api/weeklyCalendars";
 import {Header} from "../../components/Header/Header";
 import {showErrorsArray} from "../../utils/utils";
-import { StyledInput } from "../../components/StyledInput/StyledInput";
+import DeleteIcon from '@material-ui/icons/Delete';
+import ClearIcon from '@material-ui/icons/Clear';
+import IconButton from "@material-ui/core/IconButton";
+import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
 
 interface ICalendarsListProps extends RouteComponentProps {
     auth: AuthReducerInterface,
@@ -99,6 +108,32 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
             })
     }
 
+    deleteCalendar = (id: string) => {
+        deleteCalendar(id)
+            .then((response) => {
+                this.setState({
+                    weeklyCalendars: this.state.weeklyCalendars.filter(calendar => {
+                        if (calendar._id != id) {
+                            return calendar;
+                        }
+                    })
+                })
+            })
+    }
+
+    disconnectCalendar = (id: string) => {
+        postDisconnectCalendar(id)
+            .then((response) => {
+                this.setState({
+                    connectedWeeklyCalendars: this.state.connectedWeeklyCalendars.filter(calendar => {
+                        if (calendar._id != id) {
+                            return calendar;
+                        }
+                    })
+                })
+            })
+    }
+
 
     render() {
         const {auth} = this.props;
@@ -148,16 +183,27 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                         this.state.weeklyCalendars.map((calendar, index) => {
                                             return (
                                                 <div key={index}>
-                                                    <Card className={style.card}>
-                                                        <CardContent>
-                                                            <p>{calendar.name}</p>
-                                                        </CardContent>
-                                                        <CardActions>
+                                                    <div className={style.card}>
+                                                        <div className={style.card__head}>
+                                                            <h4>{calendar.name}</h4>
+                                                            <p>{calendar.description}</p>
+                                                        </div>
+                                                        <div className={style.card__body}>
                                                             <Link to={`/calendar/${calendar._id}`}>
                                                                 <Button size="small">View</Button>
                                                             </Link>
-                                                        </CardActions>
-                                                    </Card>
+                                                            <ConfirmModal
+                                                                onApprove={() => {
+                                                                    this.deleteCalendar(calendar._id)
+                                                                }}
+                                                                label={"label"}
+                                                                content={"Do you really want to delete it?"}
+                                                                approveButton={"Delete"}
+                                                            >
+                                                                <IconButton><DeleteIcon/></IconButton>
+                                                            </ConfirmModal>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )
                                         })
@@ -172,16 +218,27 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                                 this.state.connectedWeeklyCalendars.map((calendar, index) => {
                                                     return (
                                                         <div key={index}>
-                                                            <Card className={style.card}>
-                                                                <CardContent>
-                                                                    <p>{calendar.name}</p>
-                                                                </CardContent>
-                                                                <CardActions>
+                                                            <div className={style.card}>
+                                                                <div className={style.card__head}>
+                                                                    <h4>{calendar.name}</h4>
+                                                                    <p>{calendar.description}</p>
+                                                                </div>
+                                                                <div className={style.card__body}>
                                                                     <Link to={`/calendar/${calendar._id}`}>
                                                                         <Button size="small">View</Button>
                                                                     </Link>
-                                                                </CardActions>
-                                                            </Card>
+                                                                    <ConfirmModal
+                                                                        onApprove={() => {
+                                                                            this.disconnectCalendar(calendar._id)
+                                                                        }}
+                                                                        label={"label"}
+                                                                        content={"Do you really want to left this calendar?"}
+                                                                        approveButton={"Left"}
+                                                                    >
+                                                                        <IconButton><ClearIcon/></IconButton>
+                                                                    </ConfirmModal>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     )
                                                 })

@@ -128,3 +128,41 @@ export const getCalendarUsers = (calendarId: string): AxiosPromise<CalendarUsers
         })
     });
 }
+
+export interface DeleteCalendarResponse {
+    message: string
+}
+
+export const deleteCalendar = (calendarId: string): AxiosPromise<DeleteCalendarResponse> => {
+    const token = localStorage.getItem('token')
+    const options = {
+        headers: {"x-auth": `${token}`}
+    };
+
+    return new Promise( (resolve, reject) => {
+        httpRequestHandler.delete<DeleteCalendarResponse>(`weekly-calendars/${calendarId}`, options).then((response) => {
+            resolve(response);
+        }).catch((e) => {
+            reject(e.response);
+        })
+    });
+}
+
+export interface DisconnectCalendarResponse {
+    message: string
+}
+
+export const postDisconnectCalendar = (calendarId: string): AxiosPromise<DisconnectCalendarResponse> => {
+    const token = localStorage.getItem('token')
+    const options = {
+        headers: {"x-auth": `${token}`}
+    };
+
+    return new Promise( (resolve, reject) => {
+        httpRequestHandler.get<DisconnectCalendarResponse>(`weekly-calendars/disconnect/${calendarId}`, options).then((response) => {
+            resolve(response);
+        }).catch((e) => {
+            reject(e.response);
+        })
+    });
+}

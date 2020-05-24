@@ -94,6 +94,29 @@
 }
 
 .card {
+    background-color: #FCFCFC;
     width: 100%;
-    background-color: $color-light;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12), 0px 1px 3px 0px rgba(0,0,0,0.12);
+    padding: 14px;
+    border-radius: 8px;
+    &__head {
+
+    }
+    &__body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    h4 {
+        font-weight: 600;
+        font-size: $font-size-m;
+    }
+    p {
+        margin-top: 15px;
+        font-size: $font-size-s;
+    }
 }

@@ -1,0 +1,75 @@
+@import "../../styles/variables";
+
+.modal {
+  animation-duration: 300ms;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(20, 22, 24, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalBox {
+  position: relative;
+  width: 600px;
+  background-color: white;
+  color: black;
+  opacity: 1;
+  border-radius: 8px;
+  box-shadow: 0 2px 70px 0 rgba(0, 0, 0, 0.4);
+  padding: 40px 20px;
+  @include laptop {
+    width: 80%;
+  }
+
+  > svg {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+  &__content {
+    text-align: center;
+    width: 100%;
+    padding: 30px 10px;
+    h3 {
+      font-size: 36px;
+      line-height: 1.27;
+      padding-bottom: 40px;
+    }
+    p {
+      font-size: 16px;
+      color: $color-highlighted;
+      padding-bottom: 40px;
+
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+    @include laptop {
+      flex-direction: column;
+    }
+    > div {
+      width: 50%;
+      box-sizing: border-box;
+      padding-left: 20px;
+      padding-right: 20px;
+      & * {
+        width: 100%;
+      }
+      @include laptop {
+        width: 100%;
+        &:first-child {
+          padding-bottom: 20px;
+        }
+      }
+    }
+  }
+}
