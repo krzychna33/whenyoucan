@@ -11,6 +11,7 @@ import {Moment} from "moment";
 import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
 import classNames = require("classnames");
 import AddIcon from '@material-ui/icons/Add';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const ITEMS_TO_DISPLAY = 3;
 
@@ -140,8 +141,13 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                         }
                         {
                             usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 ?
-                            <span><AddIcon/> {usersCount-hourUsers}</span>:
-                            <span style={{visibility: "hidden"}}><AddIcon/> {usersCount-hourUsers}</span>
+                            <span className={style.neededUsers}><AddIcon/> {usersCount-hourUsers}</span>:
+                            <span className={style.neededUsers} style={{visibility: "hidden"}}><AddIcon/> {usersCount-hourUsers}</span>
+                        }
+                        {
+                            usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 && !hasOwnAttendance ?
+                                <span className={style.youLeftWarn}><ErrorIcon/></span>:
+                                <span className={style.youLeftWarn}style={{visibility: "hidden"}}><ErrorIcon/></span>
                         }
                     </div>
                 </div>
