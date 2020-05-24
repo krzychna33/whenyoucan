@@ -12,7 +12,7 @@ import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
 import classNames = require("classnames");
 import AddIcon from '@material-ui/icons/Add';
 
-const ITEMS_TO_DISPLAY = 2;
+const ITEMS_TO_DISPLAY = 3;
 
 interface IWeeklyCardViewProps {
     day: moment.Moment
@@ -119,7 +119,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                                 }
                                             })}
                                         </div>
-                                        +9
+                                        {reservedElements.length-ITEMS_TO_DISPLAY}
                                     </div>
                                 </div>
                             }
