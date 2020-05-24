@@ -10,6 +10,7 @@ import {UserDAO} from "../../../api/auth";
 import {Moment} from "moment";
 import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
 import classNames = require("classnames");
+import AddIcon from '@material-ui/icons/Add';
 
 interface IWeeklyCardViewProps {
     day: moment.Moment
@@ -65,7 +66,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                     <div className={style.userName}>
                                         {reservedTime.user.firstName}
                                     </div>
-                                    {reservedTime.user.firstName.substr(0, 1)}
+                                    {reservedTime.user.firstName.toUpperCase().substr(0, 1)}
                                 </div>
                             </div>
                         )
@@ -111,7 +112,32 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                             {
                                 reservedElements
                             }
+                            {
+                                reservedElements.length > 4 &&
+                                <div
+                                    key={"_" + reservedElements.length+1}
+                                    className={style.lastReservationElement}>
+                                    <div
+                                        className={style.lastReservationElement__userLetter}
+                                    >
+                                        <div className={style.restUsers}>
+                                            {reservedElements.map((item: any, index: number) => {
+                                                if (index > 4) {
+                                                    return item;
+                                                }
+                                            })}
+                                        </div>
+                                        +9
+                                    </div>
+                                </div>
+                            }
                         </div>
+                    </div>
+                    <div className={style.dailyHour__notifications}>
+                        {
+                            usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 &&
+                            <span><AddIcon/> {usersCount-hourUsers}</span>
+                        }
                     </div>
                 </div>
             )

@@ -34,9 +34,9 @@
 }
 
 .dailyHour {
-    padding: 4px 10px;
+    padding: 6px 10px;
     font-size: 16px;
-    opacity: 0.8;
+    opacity: 1;
     letter-spacing: 0.5px;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 2px;
@@ -57,10 +57,23 @@
         padding-left: 20px;
         display: flex;
         flex-direction: row;
-        height: 24px;
+        height: 26px;
         width: 80%;
         @include laptop {
             padding-left: 10px;
+        }
+    }
+
+    &__notifications {
+        display: flex;
+        > span {
+            display: flex;
+            font-weight: bold;
+            color: #069e2d;
+            align-items: center;
+            > svg {
+                width: 15px;
+            }
         }
     }
 }
@@ -73,10 +86,58 @@
     cursor: pointer;
 }
 
+.lastReservationElement {
+    &__userLetter {
+        height: 26px;
+        width: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-dark;
+        margin-right: 5px;
+        padding: 2px;
+        color: #FFF;
+        cursor: pointer;
+        position: relative;
+
+        &:hover .restUsers {
+            display: block;
+        }
+    }
+}
+
+.restUsers {
+    display: none;
+    color: #FFF;
+    position: absolute;
+    min-width: 160px;
+    background-color: $color-grey;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 10px;
+    z-index: 1;
+    bottom: -6px;
+    left: 0;
+    margin-left: 41px;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 23%;
+        left: -4%;
+        margin-left: -13px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent $color-grey transparent transparent;
+
+    }
+}
+
 .reservationElement {
     &__userLetter {
-        height: 24px;
-        width: 24px;
+        height: 26px;
+        width: 26px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -99,7 +160,7 @@
     color: #FFF;
     position: absolute;
     width: 160px;
-    background-color: $color-highlighted;
+    background-color: $color-grey;
     text-align: center;
     border-radius: 6px;
     padding: 8px 0;
@@ -116,7 +177,7 @@
             margin-left: -5px;
             border-width: 5px;
             border-style: solid;
-            border-color: $color-highlighted transparent transparent transparent;
+            border-color: $color-grey transparent transparent transparent;
 
     }
 }
