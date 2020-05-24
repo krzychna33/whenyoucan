@@ -128,6 +128,13 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
         }
     };
 
+    copyInvitation = () => {
+        const inviteText = `Hi! Join to my calendar at http://${process.env.APP_URL}${this.props.location.pathname}/join?pin=1234 ! Calendar PIN: ${this.props.weeklyCalendar.pin}`;
+        navigator.clipboard.writeText(inviteText).then(() => {
+            toast.success("Copied invitation to clipboard!")
+        });
+    }
+
     render() {
         const {weeklyCalendar, authReducer, utilsReducer} = this.props;
 
@@ -151,12 +158,12 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                                     ["fas fa-sync-alt"]: true,
                                                     ["animated pulse infinite"]: this.state.shouldRefresh
                                                 })}
-                                                onClick={() => {
-                                                    const {id} = this.props.match.params;
-                                                    this.props.startGetCalendar(id).then(() => {
-                                                        this.setState({shouldRefresh: false})
-                                                    })
-                                                }}
+                                                   onClick={() => {
+                                                       const {id} = this.props.match.params;
+                                                       this.props.startGetCalendar(id).then(() => {
+                                                           this.setState({shouldRefresh: false})
+                                                       })
+                                                   }}
                                                 />
                                             </div>
                                             <div className={style.roomInfo__singleInfo}>
@@ -176,22 +183,35 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                                         value={`${weeklyCalendar.pin}`}/>
                                                 </div>
                                             }
+                                            {
+                                                weeklyCalendar.ownerId === authReducer.user._id &&
+                                                <div className={style.roomInfo__singleInfo}>
+                                                    <Button color={"primary"} onClick={this.copyInvitation}>Copy
+                                                        Invitation</Button>
+                                                </div>
+                                            }
+                                            {
+                                                weeklyCalendar.description &&
+                                                <div className={style.roomInfo__description}>
+                                                    <h4>Description</h4>
+                                                    <p>{weeklyCalendar.description}</p>
+                                                </div>
+                                            }
                                         </div>
-                                        <div>
-                                            <div>
-                                                {
-                                                    this.state.calendarUsers.map((user, index) => (
-                                                        <span
-                                                            key={index}
-                                                            className={style.calendarUser}
-                                                            style={{backgroundColor: weeklyCalendar.usersColors[user._id]}}
-                                                        >
+                                        <div className={style.roomInfo__users}>
+                                            <h4>Users</h4>
+                                            {
+                                                this.state.calendarUsers.map((user, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className={style.calendarUser}
+                                                        style={{backgroundColor: weeklyCalendar.usersColors[user._id]}}
+                                                    >
                                                             {user.firstName} {user.lastName} {user._id === weeklyCalendar.ownerId &&
-                                                        <i className="far fa-star"></i>}
+                                                    <i className="far fa-star"/>}
                                                         </span>
-                                                    ))
-                                                }
-                                            </div>
+                                                ))
+                                            }
                                         </div>
                                     </div>
 

@@ -11,7 +11,7 @@ import {UserDAO} from "../api/auth";
 import {getWeeklyCalendar} from "../api/weeklyCalendars";
 import {WeeklyCalendarDao} from "../api/weeklyCalendars";
 import {AxiosResponse} from "../Interfaces/AxiosResponse";
-import {getRandomColor} from "../utils/utils";
+import {getRandomColor, getRandomColorList} from "../utils/utils";
 import {UsersColors} from "../reducers/WeeklyCalendarReducer";
 
 
@@ -64,8 +64,9 @@ export const clearNewAttendances = () => (
 
 export const setUsersColors = (users: string[]) => {
     let usersColors: UsersColors = {}
-    users.forEach(user => {
-        usersColors[user] = getRandomColor()
+    const colorList: string[] = getRandomColorList(users.length);
+    users.forEach((user, index) => {
+        usersColors[user] = colorList[index];
     })
 
     return {

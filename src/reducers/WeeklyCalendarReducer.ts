@@ -6,7 +6,6 @@ import {
     GET_CALENDAR_FETCH,
     GET_CALENDAR_SUCCESS, SET_USERS_COLORS
 } from "../actions/actions.const";
-import {ReservedAttendances} from "../Interfaces/ReservedAttendances";
 import {WeeklyCalendarDao} from "../api/weeklyCalendars";
 
 

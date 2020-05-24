@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
 import * as style from "./style.scss"
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import {connect} from "react-redux";
 import {StoreInteface} from "../../../stores/configureStore";
 import {addNewAttendance} from "../../../actions/weeklyCalendar";
@@ -24,6 +24,13 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
 
     constructor(props: IWeeklyCardViewProps) {
         super(props);
+    }
+
+    handleNewAttendance = (event: { preventDefault: () => void; target: any; currentTarget: any; }, hourHook: any, hasOwnAttendance: boolean) => {
+        event.preventDefault();
+        if (event.target === event.currentTarget && !hasOwnAttendance) {
+            this.props.addNewAttendance(hourHook, this.props.user);
+        }
     }
 
     renderHours = (): Array<any> => {
@@ -74,7 +81,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                             this.props.addNewAttendance(hourHook, this.props.user)
                         }}
                     >
-                        <AddCircleIcon/>
+                        <AddCircleOutlineIcon/>
                     </div>
                 )
             }
@@ -83,19 +90,28 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
             hoursArray.push(
                 <div
                     key={i}
-                    className={style.dailyHour}
+                    className={classNames({
+                        [style.dailyHour]: true,
+                        [style.goodDailyHour]: hourUsers === usersCount
+                    })}
                 >
-                    <div className={classNames({
-                        [style.goodHour]: hourUsers === usersCount
-                    })}>
+                    <div
+                        className={classNames({
+                            [style.hourCursor]: !hasOwnAttendance,
+                            [style.goodHour]: hourUsers === usersCount
+                        })}
+                        onClick={(event) => this.handleNewAttendance(event, hourHook, hasOwnAttendance)}
+                    >
                         {
                             hour.format("HH:mm")
                         }
                     </div>
-                    <div className={style.dailyHour__reservedElements}>
-                        {
-                            reservedElements
-                        }
+                    <div className={style.dailyHour__workingElements}>
+                        <div className={style.dailyHour__reservedElements}>
+                            {
+                                reservedElements
+                            }
+                        </div>
                     </div>
                 </div>
             )

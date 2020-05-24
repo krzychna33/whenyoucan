@@ -17,6 +17,17 @@ export const getRandomColor = (): string => {
     return color.toUpperCase();
 }
 
+export const getRandomColorList = (count: number): string[] => {
+    const colorsList: string[] = [];
+    while (colorsList.length < count) {
+        let color = getRandomColor()
+        if (!colorsList.find((item) => item == color)) {
+            colorsList.push(color)
+        }
+    }
+    return colorsList
+}
+
 export const showErrorsArray = (errors: any) => {
     if (errors) {
         const errorsKeys = Object.keys(errors);

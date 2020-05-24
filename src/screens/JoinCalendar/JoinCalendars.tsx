@@ -35,12 +35,22 @@ const JoinCalendar: React.FC<IJoinCalendarProps> = (props: any) => {
 
     const { match } = props;
     const {id} = match.params;
+    const {search} = props.location;
 
     useEffect(() => {
-        dispatch(startGetAuthMe());
+        if (authReducer.isAuthenticated) {
+            dispatch(startGetAuthMe());
+        }
         getWeeklyCalendar(id).then((response: any) => {
             setCalendar(response.data)
         })
+        if (search) {
+            const urlParams = new URLSearchParams(search);
+            const pinParam = urlParams.get('pin')
+            if (pinParam) {
+                setPin(pinParam);
+            }
+        }
     }, []);
 
     const joinCalendar = () => {
@@ -74,13 +84,13 @@ const JoinCalendar: React.FC<IJoinCalendarProps> = (props: any) => {
                                     [style.calendarJoin]: true,
                                     [style.calendarJoin__guest]: !authReducer.user
                                 })}>
-                                    <h3>Provide PIN & Join <span>{calendar.name}</span></h3>
+                                    <h3>Provide PIN & Join</h3>
+                                    <h4>{calendar.name}</h4>
                                     <StyledInput
                                         color="secondary"
                                         value={pin}
                                         label="PIN"
                                         required
-                                        type={"password"}
                                         onChange={(e) => {setPin(e.target.value)}}/>
                                     <Button variant="contained" color="primary"
                                             onClick={joinCalendar}>JOIN</Button>
