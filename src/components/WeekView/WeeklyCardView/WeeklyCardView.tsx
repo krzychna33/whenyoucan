@@ -12,6 +12,8 @@ import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
 import classNames = require("classnames");
 import AddIcon from '@material-ui/icons/Add';
 
+const ITEMS_TO_DISPLAY = 2;
+
 interface IWeeklyCardViewProps {
     day: moment.Moment
     user: UserDAO,
@@ -73,20 +75,6 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                     }
                 })
             });
-            if (!hasOwnAttendance) {
-                reservedElements.push(
-                    <div
-                        key={i}
-                        className={style.addNewReservation}
-                        onClick={() => {
-                            this.props.addNewAttendance(hourHook, this.props.user)
-                        }}
-                    >
-                        <AddCircleOutlineIcon/>
-                    </div>
-                )
-            }
-
 
             hoursArray.push(
                 <div
@@ -110,10 +98,14 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                     <div className={style.dailyHour__workingElements}>
                         <div className={style.dailyHour__reservedElements}>
                             {
-                                reservedElements
+                                reservedElements.map((item: any, index: number) => {
+                                    if (index < ITEMS_TO_DISPLAY) {
+                                        return item;
+                                    }
+                                })
                             }
                             {
-                                reservedElements.length >= 4 &&
+                                reservedElements.length >= ITEMS_TO_DISPLAY+1 &&
                                 <div
                                     key={"_" + reservedElements.length+1}
                                     className={style.lastReservationElement}>
@@ -122,7 +114,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                     >
                                         <div className={style.restUsers}>
                                             {reservedElements.map((item: any, index: number) => {
-                                                if (index > 4) {
+                                                if (index >= ITEMS_TO_DISPLAY) {
                                                     return item;
                                                 }
                                             })}
@@ -135,8 +127,21 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                     </div>
                     <div className={style.dailyHour__notifications}>
                         {
-                            usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 &&
-                            <span><AddIcon/> {usersCount-hourUsers}</span>
+                            !hasOwnAttendance &&
+                            <div
+                                key={i}
+                                className={style.addNewReservation}
+                                onClick={() => {
+                                    this.props.addNewAttendance(hourHook, this.props.user)
+                                }}
+                            >
+                                <AddCircleOutlineIcon/>
+                            </div>
+                        }
+                        {
+                            usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 ?
+                            <span><AddIcon/> {usersCount-hourUsers}</span>:
+                            <span style={{visibility: "hidden"}}><AddIcon/> {usersCount-hourUsers}</span>
                         }
                     </div>
                 </div>
