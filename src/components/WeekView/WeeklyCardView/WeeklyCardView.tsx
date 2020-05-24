@@ -119,7 +119,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                                 }
                                             })}
                                         </div>
-                                        {reservedElements.length-ITEMS_TO_DISPLAY}
+                                        +{reservedElements.length-ITEMS_TO_DISPLAY}
                                     </div>
                                 </div>
                             }
