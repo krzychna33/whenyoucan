@@ -5,21 +5,29 @@ import {
     getAuthMe,
     postLogin,
     postRegister,
-    UserDAO, postLoginFacebook, LoginFacebookDAO
+    UserDAO,
+    postLoginFacebook,
+    LoginFacebookDAO
 } from "../api/auth";
 import {
     GET_AUTH_ME_ERROR,
     GET_AUTH_ME_FETCH,
     GET_AUTH_ME_SUCCESS,
-    POST_LOGIN_ERROR, POST_LOGIN_FACEBOOK_ERROR, POST_LOGIN_FACEBOOK_FETCH, POST_LOGIN_FACEBOOK_SUCCESS,
+    POST_LOGIN_ERROR,
+    POST_LOGIN_FACEBOOK_ERROR,
+    POST_LOGIN_FACEBOOK_FETCH,
+    POST_LOGIN_FACEBOOK_SUCCESS,
     POST_LOGIN_FETCH,
-    POST_LOGIN_SUCCESS, POST_SIGNUP_ERROR,
-    POST_SIGNUP_FETCH, POST_SIGNUP_SUCCESS,
+    POST_LOGIN_SUCCESS,
+    POST_SIGNUP_ERROR,
+    POST_SIGNUP_FETCH,
+    POST_SIGNUP_SUCCESS,
     SET_LOGGED_IN,
     SET_LOGGED_OUT
 } from "./actions.const";
 import {toast} from "react-toastify";
 import {AxiosResponse, AxiosError} from "axios";
+import {showErrorMessage, showErrorsArray} from "../utils/utils";
 
 const postLoginSuccess = () => (
     {
@@ -46,9 +54,8 @@ export const startPostLogin = (email: string, password: string) => {
             localStorage.setItem('token', response.data.token);
             dispatch(postLoginSuccess());
         }).catch((e) => {
-            toast.error(e.data.message);
+            showErrorMessage(e.data.message);
             dispatch(postLoginError());
-            alert(e.data.message)
         })
     }
 };
@@ -122,7 +129,8 @@ export const startPostSignUp = (data: RegisterUserDto) => {
             localStorage.setItem("token", response.data.token);
             dispatch(postSignUpSuccess());
             toast.success("You have been successfully registered");
-        }).catch((e: AxiosError) => {
+        }).catch((e) => {
+            showErrorsArray(e.data.errors);
             dispatch(postSignUpError())
         })
     }
@@ -147,7 +155,7 @@ export const startPostLoginFacebook = (access_token: string, user_id: string) =>
             localStorage.setItem('token', response.data.token);
             dispatch(postLoginFacebookSuccess());
         }).catch((e) => {
-            toast.error(e.data.message);
+            showErrorMessage(e.data.message);
             dispatch(postLoginFacebookError());
         })
     }

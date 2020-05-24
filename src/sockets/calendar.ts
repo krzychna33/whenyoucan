@@ -2,6 +2,10 @@ import * as io from "socket.io-client";
 
 const socket = io.connect(process.env.API_URL);
 
+export const disconnectSubscriber = (calendarId: string) => {
+    socket.emit('LEAVE_ROOM', {calendarId});
+}
+
 export const subscribeToAttendanceEvent = ({userId, calendarId}: any, callback: CallableFunction) => {
     socket.emit("join", {userId, calendarId}, (err: any) => {
         if (err) {

@@ -9,17 +9,23 @@ import {getConnectedCalendars, getWeeklyCalendars, postCreateCalendar} from "../
 import * as style from "./style.scss"
 import {WeeklyCalendarDao} from "../../api/weeklyCalendars";
 import {Header} from "../../components/Header/Header";
+import {showErrorsArray} from "../../utils/utils";
+import { StyledInput } from "../../components/StyledInput/StyledInput";
 
 interface ICalendarsListProps extends RouteComponentProps {
     auth: AuthReducerInterface,
+
     startGetAuthMe(): any,
+
     startLogout(): any
 }
 
 interface ICalendarsListState {
     weeklyCalendars: WeeklyCalendarDao[],
     connectedWeeklyCalendars: WeeklyCalendarDao[],
-    newCalendarName: string
+    newCalendarName: string,
+    newCalendarDescription: string,
+    newCalendarPin: string
 }
 
 class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListState> {
@@ -29,7 +35,9 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
         this.state = {
             weeklyCalendars: [],
             newCalendarName: "",
-            connectedWeeklyCalendars: []
+            connectedWeeklyCalendars: [],
+            newCalendarDescription: "",
+            newCalendarPin: "1234"
         }
     }
 
@@ -63,12 +71,32 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
         })
     };
 
-    createCalendar = () => {
-        postCreateCalendar({name: this.state.newCalendarName}).then(() => {
-            getWeeklyCalendars().then((response: any) => {
-                this.setState({weeklyCalendars: response.data.results});
-            })
+    onNewCalendarDescriptionChange = (e: any) => {
+        this.setState({
+            newCalendarDescription: e.target.value
         })
+    };
+
+    onNewCalendarPinChange = (e: any) => {
+        this.setState({
+            newCalendarPin: e.target.value
+        })
+    };
+
+    createCalendar = () => {
+        postCreateCalendar({
+            name: this.state.newCalendarName,
+            description: this.state.newCalendarDescription,
+            pin: this.state.newCalendarPin
+        }).then(() => {
+            getWeeklyCalendars()
+                .then((response: any) => {
+                    this.setState({weeklyCalendars: response.data.results});
+                })
+        })
+            .catch((e) => {
+                showErrorsArray(e.data.errors);
+            })
     }
 
 
@@ -85,8 +113,29 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                 <div className={style.addCalendar}>
                                     <form>
                                         <div>
-                                            <TextField id="standard-basic" label="Name" required
-                                                       onChange={this.onNewCalendarNameChange}/>
+                                            <div className={style.addCalendar__1stLine}>
+                                                <TextField
+                                                    id="name"
+                                                    label="Name"
+                                                    required
+                                                    onChange={this.onNewCalendarNameChange}
+                                                    value={this.state.newCalendarName}
+                                                />
+                                                <TextField
+                                                    id="pin"
+                                                    label="PIN"
+                                                    onChange={this.onNewCalendarPinChange}
+                                                    value={this.state.newCalendarPin}
+                                                />
+                                            </div>
+                                            <div className={style.addCalendar__2ndLine}>
+                                                <TextField
+                                                    id="description"
+                                                    label="Short description"
+                                                    onChange={this.onNewCalendarDescriptionChange}
+                                                    value={this.state.newCalendarDescription}
+                                                />
+                                            </div>
                                         </div>
                                         <div>
                                             <Button variant="contained" color="primary"
@@ -96,9 +145,9 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                 </div>
                                 <div className={style.calendarsList}>
                                     {
-                                        this.state.weeklyCalendars.map((calendar) => {
+                                        this.state.weeklyCalendars.map((calendar, index) => {
                                             return (
-                                                <div>
+                                                <div key={index}>
                                                     <Card className={style.card}>
                                                         <CardContent>
                                                             <p>{calendar.name}</p>
@@ -120,9 +169,9 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                         <h2>Connected calendars</h2>
                                         <div className={style.calendarsList}>
                                             {
-                                                this.state.connectedWeeklyCalendars.map((calendar) => {
+                                                this.state.connectedWeeklyCalendars.map((calendar, index) => {
                                                     return (
-                                                        <div>
+                                                        <div key={index}>
                                                             <Card className={style.card}>
                                                                 <CardContent>
                                                                     <p>{calendar.name}</p>

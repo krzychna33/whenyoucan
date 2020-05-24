@@ -12,7 +12,7 @@ import {Link, RouteComponentProps} from "react-router-dom"
 import {clearNewAttendances, setUsersColors, startGetCalendar} from "../../actions/weeklyCalendar";
 import classNames = require("classnames");
 import {UtilsReducerInterface} from "../../reducers/UtilsReducer";
-import {subscribeToAttendanceEvent} from "../../sockets/calendar";
+import {disconnectSubscriber, subscribeToAttendanceEvent} from "../../sockets/calendar";
 import {toast, Slide} from "react-toastify";
 import {NewAttendancesNotify} from "../../components/NewAttendancesNotify/NewAttendacnesNotify";
 
@@ -56,6 +56,11 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
         }
     }
 
+    componentWillUnmount(): void {
+        const {id} = this.props.match.params;
+        disconnectSubscriber(id);
+    }
+
     componentDidMount(): void {
         const {id} = this.props.match.params;
         this.props.startGetCalendar(id).then(() => {
@@ -67,23 +72,24 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                 calendarId: id
             }, () => {
                 if (!this.state.newAttendancesNotify) {
-                    this.setState({newAttendancesNotify: true})
-                    toast(
-                        <NewAttendancesNotify onRefresh={() => {
-                            this.props.startGetCalendar(id).then(() => {
-                                this.setState({shouldRefresh: false})
-                            })
-                        }}/>,
-                        {
-                            transition: Slide,
-                            position: "top-center",
-                            hideProgressBar: true,
-                            className: style.toastStyle,
-                            autoClose: 5000,
-                            onClose: () => {
-                                this.setState({newAttendancesNotify: false})
-                            }
-                        });
+                    this.setState({newAttendancesNotify: true}, () => {
+                        toast(
+                            <NewAttendancesNotify onRefresh={() => {
+                                this.props.startGetCalendar(id).then(() => {
+                                    this.setState({shouldRefresh: false})
+                                })
+                            }}/>,
+                            {
+                                transition: Slide,
+                                position: "top-center",
+                                hideProgressBar: true,
+                                className: style.toastStyle,
+                                autoClose: 5000,
+                                onClose: () => {
+                                    this.setState({newAttendancesNotify: false})
+                                }
+                            });
+                    })
                 }
                 this.setState({shouldRefresh: true})
             })
@@ -100,8 +106,6 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
     }
 
     private animateFixedApplyBtn = () => {
-        console.log(this.fixedApplyBtn.current)
-
         this.fixedApplyBtn.current.classList.add("animated")
         this.fixedApplyBtn.current.classList.add("pulse")
         this.fixedApplyBtn.current.addEventListener("animationend", this.fixedApplyBtnHandleAnimationEnd)
@@ -115,11 +119,13 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
 
     pushAttendances = () => {
         const {id} = this.props.match.params;
-        postPushAttendances(id, {
-            times: this.props.weeklyCalendar.newAttendances
-        }).then(() => {
-            this.props.clearNewAttendances();
-        });
+        if (this.props.weeklyCalendar.newAttendances.length > 0) {
+            postPushAttendances(id, {
+                times: this.props.weeklyCalendar.newAttendances
+            }).then(() => {
+                this.props.clearNewAttendances();
+            });
+        }
     };
 
     render() {
@@ -195,8 +201,12 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                             <p>You have added {weeklyCalendar.newAttendances.length} attendance
                                                 items.</p>
                                             <div>
-                                                <Button variant="contained" color="primary"
-                                                        onClick={this.pushAttendances}>
+                                                <Button
+                                                    variant={weeklyCalendar.newAttendances.length > 0 ? "contained" : "outlined"}
+                                                    color={"primary"}
+                                                    onClick={this.pushAttendances}
+                                                    className={style.disabledBtn}
+                                                >
                                                     Apply
                                                 </Button>
                                             </div>
@@ -211,6 +221,7 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                             <div
                                 ref={this.fixedApplyBtn}
                                 className={classNames({
+                                    [style.applyAttendance__disabled]: weeklyCalendar.newAttendances.length == 0,
                                     [style.applyAttendance]: true
                                 })}
                                 onClick={this.pushAttendances}

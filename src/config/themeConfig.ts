@@ -15,6 +15,12 @@ export const theme = createMuiTheme({
             main: '#BBC4CC',
             dark: '#BBC4CC',
             contrastText: '#BBC4CC',
+        },
+        warning: {
+            light: '#f7fff7',
+            main: '#333533',
+            dark: '#242423',
+            contrastText: '#fff',
         }
     },
     typography: {

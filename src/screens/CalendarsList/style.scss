@@ -28,6 +28,10 @@
 }
 
 .addCalendar {
+    width: 50%;
+    @include laptop {
+        width: 100%;
+    }
     > form {
         display: flex;
         flex-direction: column;
@@ -39,6 +43,35 @@
 
     &__hidden {
         height: 0;
+    }
+
+    &__1stLine {
+        & > * {
+            box-sizing: border-box;
+            width: 50%;
+            &:first-child {
+                padding-right: 2% !important;
+                width: 50%;
+                @include laptop {
+                    width: 100%;
+                }
+            }
+            @include laptop {
+                width: 100%;
+            }
+            @include laptop {
+                width: 100%;
+                &:not(:last-child) {
+                    padding-right: 0 !important;
+                }
+            }
+        }
+    }
+
+    &__2ndLine {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
 }
 

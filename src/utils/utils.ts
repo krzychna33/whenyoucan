@@ -1,23 +1,36 @@
+import {toast} from "react-toastify";
+
 export const getRandomColor = (): string => {
     const colors = [
-        "2a9d8f",
-        "e76f51",
-        "1d3557",
-        "9bf6ff",
-        "9b5de5",
-        "5f0f40",
-        "0496ff",
-        "390099",
-        "8ac926",
-        "191263",
-        "ce4257",
-        "0d1b2a",
-        "edf67d",
-        "4f772d",
-        "ff9f1c",
-        "779be7"
+        "8B1E3F",
+        "3C153B",
+        "89BD9E",
+        "F0C987",
+        "DB4C40",
+        "DB4C40",
+        "9B9ECE",
+        "ACADBC",
+        "9B9ECE"
     ];
     let color = '#';
-    color += colors[Math.floor(Math.random() * 16)];
+    color += colors[Math.floor(Math.random() * colors.length)];
     return color.toUpperCase();
 }
+
+export const showErrorsArray = (errors: any) => {
+    if (errors) {
+        const errorsKeys = Object.keys(errors);
+        errorsKeys.forEach((error: any) => {
+            toast.error(errors[error].message)
+        })
+    }
+};
+
+export const showErrorMessage = (message: string) => {
+    if (message) {
+        toast.error(message)
+    } else {
+        toast.error("Unhandled Error!")
+    }
+}
+

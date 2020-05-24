@@ -15,6 +15,7 @@ import {toast} from "react-toastify";
 import {Link, withRouter, RouteComponentProps} from "react-router-dom";
 import {StyledInput} from "../../components/StyledInput/StyledInput";
 import {Header} from "../../components/Header/Header";
+import {showErrorMessage} from "../../utils/utils";
 
 interface IJoinCalendarProps extends RouteComponentProps {
 
@@ -49,7 +50,7 @@ const JoinCalendar: React.FC<IJoinCalendarProps> = (props: any) => {
                 props.history.push("/calendars")
             }
         }).catch((e) => {
-            toast.error(e.data.message || "Unhandled error");
+            showErrorMessage(e.data.message);
         })
     };
 

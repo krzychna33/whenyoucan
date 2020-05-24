@@ -146,9 +146,16 @@
     -webkit-box-shadow: 10px 10px 24px -15px rgba(0,0,0,0.75);
     -moz-box-shadow: 10px 10px 24px -15px rgba(0,0,0,0.75);
     box-shadow: 10px 10px 24px -15px rgba(0,0,0,0.75);
+    transition: color, background-color 300ms linear;
     @include mediumLaptop {
         bottom: 20px;
         right: 20px;
+    }
+
+    &__disabled {
+        cursor: auto;
+        background: $color-grey;
+        color: #bfc0c0;
     }
 }
 
@@ -158,3 +165,4 @@
         width: 100vw;
     }
 }
+
