@@ -19,10 +19,16 @@ export const getRandomColor = (): string => {
 
 export const getRandomColorList = (count: number): string[] => {
     const colorsList: string[] = [];
+    let attempts = 0;
     while (colorsList.length < count) {
+        attempts++;
         let color = getRandomColor()
-        if (!colorsList.find((item) => item == color)) {
+        if (attempts > 100) {
             colorsList.push(color)
+        } else {
+            if (!colorsList.find((item) => item == color)) {
+                colorsList.push(color)
+            }
         }
     }
     return colorsList

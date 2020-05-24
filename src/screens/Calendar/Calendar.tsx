@@ -129,7 +129,7 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
     };
 
     copyInvitation = () => {
-        const inviteText = `Hi! Join to my calendar at http://${process.env.APP_URL}${this.props.location.pathname}/join?pin=1234 ! Calendar PIN: ${this.props.weeklyCalendar.pin}`;
+        const inviteText = `Hi! Join to my calendar at ${process.env.APP_URL}${this.props.location.pathname}/join?pin=1234 ! Calendar PIN: ${this.props.weeklyCalendar.pin}`;
         navigator.clipboard.writeText(inviteText).then(() => {
             toast.success("Copied invitation to clipboard!")
         });
