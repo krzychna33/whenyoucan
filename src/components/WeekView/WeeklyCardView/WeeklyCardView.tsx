@@ -113,7 +113,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                 reservedElements
                             }
                             {
-                                reservedElements.length > 4 &&
+                                reservedElements.length >= 4 &&
                                 <div
                                     key={"_" + reservedElements.length+1}
                                     className={style.lastReservationElement}>
