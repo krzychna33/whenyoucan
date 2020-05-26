@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import {
-    ADD_NEW_ATTENDANCE,
-    CLEAR_NEW_ATTENDANCES,
+    ADD_NEW_ATTENDANCE, CLEAR_DELETED_ATTENDANCES,
+    CLEAR_NEW_ATTENDANCES, DELETE_NEW_ATTENDANCE,
     GET_CALENDAR_ERROR,
     GET_CALENDAR_FETCH,
     GET_CALENDAR_SUCCESS,
@@ -74,3 +74,16 @@ export const setUsersColors = (users: string[]) => {
         data: usersColors
     }
 }
+
+export const deleteNewAttendance = (time: moment.Moment, user: UserDAO) => {
+    return {
+        type: DELETE_NEW_ATTENDANCE,
+        data: {
+            time, user
+        }
+    }
+};
+
+export const clearDeletedAttendances = () => ({
+    type: CLEAR_DELETED_ATTENDANCES
+})

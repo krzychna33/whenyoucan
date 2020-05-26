@@ -58,6 +58,21 @@ export const postPushAttendances = (id: string, body: any) => {
     });
 };
 
+export const postUpdateAttendances = (id: string, body: any) => {
+    const token = localStorage.getItem('token')
+    const options = {
+        headers: {"x-auth": `${token}`}
+    };
+
+    return new Promise( (resolve, reject) => {
+        httpRequestHandler.post(`weekly-calendars/update-attendances/${id}`, body, options).then((response) => {
+            resolve(response);
+        }).catch((e) => {
+            reject(e.response);
+        })
+    });
+}
+
 export const postCreateCalendar = (body: any) => {
     const token = localStorage.getItem('token')
     const options = {

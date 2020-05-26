@@ -89,7 +89,6 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
                 }
             });
 
-
             days.push(
                 <WeeklyCardView
                     key={i}

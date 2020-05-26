@@ -6,8 +6,11 @@
 }
 
 .content {
-    flex-grow: 1;
-    display: flex
+    display: flex;
+    width: calc(100vw - 320px);
+    @include mediumLaptop {
+        width: 100vw;
+    }
 }
 
 .drawer {
@@ -22,7 +25,7 @@
     overflow-y: auto;
 
     > div {
-        width: 320px;
+        width: 100%;
         display: flex;
         flex-direction: column;
         overflow-y: hidden;
@@ -154,6 +157,7 @@
     z-index: 81;
     border-radius: 50%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     color: white;
@@ -163,6 +167,23 @@
     -moz-box-shadow: 10px 10px 24px -15px rgba(0,0,0,0.75);
     box-shadow: 10px 10px 24px -15px rgba(0,0,0,0.75);
     transition: color, background-color 300ms linear;
+    > p {
+        &:first-child {
+            margin-top: 2px;
+            margin-bottom: 5px;
+        }
+        &:last-child {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            svg {
+                margin-top: 1px;
+                height: 16px;
+                width: auto;
+            }
+        }
+    }
     @include mediumLaptop {
         bottom: 20px;
         right: 20px;
@@ -172,6 +193,47 @@
         cursor: auto;
         background: $color-grey;
         color: #bfc0c0;
+    }
+
+    &__plus {
+        position: absolute;
+        background-color: $color-grey;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        top: 2px;
+        left: -14px;
+        opacity: 0;
+        transition: opacity 200ms ease-out;
+
+
+        &__show {
+            opacity: 1;
+        }
+    }
+
+    &__minus {
+        position: absolute;
+        background-color: $color-grey;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        top: 52px;
+        left: -14px;
+        opacity: 0;
+        transition: opacity 200ms ease-out;
+
+        &__show {
+            opacity: 1;
+        }
     }
 }
 

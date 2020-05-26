@@ -4,7 +4,7 @@ import * as style from "./style.scss"
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import {connect} from "react-redux";
 import {StoreInteface} from "../../../stores/configureStore";
-import {addNewAttendance} from "../../../actions/weeklyCalendar";
+import {addNewAttendance, deleteNewAttendance} from "../../../actions/weeklyCalendar";
 import {ReservedAttendances} from "../../../Interfaces/ReservedAttendances";
 import {UserDAO} from "../../../api/auth";
 import {Moment} from "moment";
@@ -12,6 +12,7 @@ import {UsersColors} from "../../../reducers/WeeklyCalendarReducer";
 import classNames = require("classnames");
 import AddIcon from '@material-ui/icons/Add';
 import ErrorIcon from '@material-ui/icons/Error';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 const ITEMS_TO_DISPLAY = 3;
 
@@ -19,7 +20,8 @@ interface IWeeklyCardViewProps {
     day: moment.Moment
     user: UserDAO,
     reservedAttendances: ReservedAttendances[],
-    addNewAttendance: any,
+    addNewAttendance(time: moment.Moment, user: UserDAO): any,
+    deleteNewAttendance(time: moment.Moment, user: UserDAO): any,
     usersColors: UsersColors,
     usersCount: number
 }
@@ -30,10 +32,16 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
         super(props);
     }
 
-    handleNewAttendance = (event: { preventDefault: () => void; target: any; currentTarget: any; }, hourHook: any, hasOwnAttendance: boolean) => {
+    handleNewAttendance = (event: { preventDefault: () => void; target: any; currentTarget: any; }, hourHook: moment.Moment, hasOwnAttendance: boolean) => {
         event.preventDefault();
         if (event.target === event.currentTarget && !hasOwnAttendance) {
             this.props.addNewAttendance(hourHook, this.props.user);
+        }
+    }
+
+    handleAttendanceDelete = (hourHook: moment.Moment, hasOwnAttendance: boolean) => {
+        if (hasOwnAttendance) {
+            this.props.deleteNewAttendance(hourHook, this.props.user);
         }
     }
 
@@ -76,6 +84,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                     }
                 })
             });
+
 
             hoursArray.push(
                 <div
@@ -140,6 +149,18 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                             </div>
                         }
                         {
+                            hasOwnAttendance &&
+                            <div
+                                key={i}
+                                className={style.removeReservation}
+                                onClick={() => {
+                                    this.handleAttendanceDelete(hourHook, hasOwnAttendance);
+                                }}
+                            >
+                                <RemoveCircleOutlineIcon/>
+                            </div>
+                        }
+                        {
                             usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 ?
                             <span className={style.neededUsers}><AddIcon/> {usersCount-hourUsers}</span>:
                             <span className={style.neededUsers} style={{visibility: "hidden"}}><AddIcon/> {usersCount-hourUsers}</span>
@@ -162,10 +183,11 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
         return (
             <div className={style.weeklyCardView}>
                 <div className={style.header}>
-                    <div className={style.header__dayName}>
-                        {
-                            this.props.day.format("dddd")
-                        }
+                    <div className={classNames({
+                        [style.header__dayName]: true,
+                        [style.header__dayName__today]: this.props.day.isSame(moment(), 'day')
+                    })}>
+                        <span>{this.props.day.format("dddd")}</span>
                     </div>
                     <div className={style.header__dayNo}>
                         {
@@ -191,7 +213,8 @@ const mapStateToProps = (state: StoreInteface) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-        addNewAttendance: (time: moment.Moment, user: UserDAO) => dispatch(addNewAttendance(time, user))
+        addNewAttendance: (time: moment.Moment, user: UserDAO) => dispatch(addNewAttendance(time, user)),
+        deleteNewAttendance: (time: moment.Moment, user: UserDAO) => dispatch(deleteNewAttendance(time, user))
     }
 }
 

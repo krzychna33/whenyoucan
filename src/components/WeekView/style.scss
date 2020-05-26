@@ -15,12 +15,20 @@
         flex: 0 0 auto;
         width: 25%;
 
-        @include mediumLaptop {
+        @include desktop {
             width: 33%;
         }
 
+        @include mediumLaptop {
+            width: 40%;
+        }
+
+        @include tablet {
+            width: 60%;
+        }
+
         @include phones {
-            width: 70%;
+            width: 100%;
         }
     }
 

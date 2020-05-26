@@ -7,15 +7,21 @@ import {StoreInteface} from "../../stores/configureStore";
 import {WeeklyCalendarReducerInterface} from "../../reducers/WeeklyCalendarReducer";
 import {startGetAuthMe} from "../../actions/auth";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
-import {CalendarUser, getCalendarUsers, postPushAttendances} from "../../api/weeklyCalendars";
+import {CalendarUser, getCalendarUsers, postPushAttendances, postUpdateAttendances} from "../../api/weeklyCalendars";
 import {Link, RouteComponentProps} from "react-router-dom"
-import {clearNewAttendances, setUsersColors, startGetCalendar} from "../../actions/weeklyCalendar";
+import {
+    clearDeletedAttendances,
+    clearNewAttendances,
+    setUsersColors,
+    startGetCalendar
+} from "../../actions/weeklyCalendar";
 import classNames = require("classnames");
 import {UtilsReducerInterface} from "../../reducers/UtilsReducer";
 import {disconnectSubscriber, subscribeToAttendanceEvent} from "../../sockets/calendar";
 import {toast, Slide} from "react-toastify";
 import {NewAttendancesNotify} from "../../components/NewAttendancesNotify/NewAttendacnesNotify";
-
+import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
 
 interface MatchParams {
     id: string
@@ -32,6 +38,8 @@ interface ICalendarProps extends RouteComponentProps<MatchParams> {
     startGetCalendar(id: string): any
 
     setUsersColors(users: string[]): any
+
+    clearDeletedAttendances(): any
 
     authReducer: AuthReducerInterface,
     utilsReducer: UtilsReducerInterface
@@ -119,12 +127,23 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
 
     pushAttendances = () => {
         const {id} = this.props.match.params;
-        if (this.props.weeklyCalendar.newAttendances.length > 0) {
-            postPushAttendances(id, {
-                times: this.props.weeklyCalendar.newAttendances
+        const userId = this.props.authReducer.user._id;
+        if (this.props.weeklyCalendar.newAttendances.length > 0 || this.props.weeklyCalendar.deletedAttendances.length > 0) {
+            postUpdateAttendances(id, {
+                times: this.props.weeklyCalendar.reservedAttendances.find((reservedAttendance) => {
+                    if (reservedAttendance.user._id === userId) {
+                        return reservedAttendance
+                    }
+                }).times
             }).then(() => {
                 this.props.clearNewAttendances();
-            });
+                this.props.clearDeletedAttendances();
+            })
+            // postPushAttendances(id, {
+            //     times: this.props.weeklyCalendar.newAttendances
+            // }).then(() => {
+            //     this.props.clearNewAttendances();
+            // });
         }
     };
 
@@ -218,11 +237,13 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                     <div className={style.yourAttendance}>
                                         <h3>{this.props.authReducer.user.firstName}</h3>
                                         <div className={style.addedAttendances}>
-                                            <p>You have added {weeklyCalendar.newAttendances.length} attendance
+                                            <p>Added {weeklyCalendar.newAttendances.length} attendance
+                                                items.</p>
+                                            <p>Removed {weeklyCalendar.deletedAttendances.length} attendance
                                                 items.</p>
                                             <div>
                                                 <Button
-                                                    variant={weeklyCalendar.newAttendances.length > 0 ? "contained" : "outlined"}
+                                                    variant={weeklyCalendar.newAttendances.length > 0 || weeklyCalendar.deletedAttendances.length > 0 ? "contained" : "outlined"}
                                                     color={"primary"}
                                                     onClick={this.pushAttendances}
                                                     className={style.disabledBtn}
@@ -241,12 +262,24 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                             <div
                                 ref={this.fixedApplyBtn}
                                 className={classNames({
-                                    [style.applyAttendance__disabled]: weeklyCalendar.newAttendances.length == 0,
+                                    [style.applyAttendance__disabled]: weeklyCalendar.newAttendances.length == 0 && weeklyCalendar.deletedAttendances.length == 0,
                                     [style.applyAttendance]: true
                                 })}
                                 onClick={this.pushAttendances}
                             >
-                                Apply ({weeklyCalendar.newAttendances.length})
+                                <div className={classNames({
+                                    [style.applyAttendance__plus]: true,
+                                    [style.applyAttendance__plus__show]: weeklyCalendar.newAttendances.length > 0
+                                })}>
+                                    +{weeklyCalendar.newAttendances.length}
+                                </div>
+                                <div className={classNames({
+                                    [style.applyAttendance__minus]: true,
+                                    [style.applyAttendance__minus__show]: weeklyCalendar.deletedAttendances.length > 0
+                                })}>
+                                    -{weeklyCalendar.deletedAttendances.length}
+                                </div>
+                                <p>Apply</p>
                             </div>
                             <main
                                 className={style.content}
@@ -277,7 +310,8 @@ const mapDispatchToProps = (dispatch: any) => {
         startGetAuthMe: () => dispatch(startGetAuthMe()),
         clearNewAttendances: () => dispatch(clearNewAttendances()),
         startGetCalendar: (id: string) => dispatch(startGetCalendar(id)),
-        setUsersColors: (users: string[]) => dispatch(setUsersColors(users))
+        setUsersColors: (users: string[]) => dispatch(setUsersColors(users)),
+        clearDeletedAttendances: () => dispatch(clearDeletedAttendances())
     }
 };
 

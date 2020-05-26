@@ -185,7 +185,13 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                                 <div key={index}>
                                                     <div className={style.card}>
                                                         <div className={style.card__head}>
-                                                            <h4>{calendar.name}</h4>
+                                                            <h4>
+                                                                <Link
+                                                                    to={`/calendar/${calendar._id}`}
+                                                                >
+                                                                    {calendar.name}
+                                                                </Link>
+                                                            </h4>
                                                             <p>{calendar.description}</p>
                                                         </div>
                                                         <div className={style.card__body}>
