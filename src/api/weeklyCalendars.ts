@@ -24,7 +24,8 @@ export interface WeeklyCalendarDao {
     name: string,
     ownerId: string,
     pin?: string,
-    description?: string
+    description?: string,
+    expectedUsersCount?: number
     reservedAttendances: ReservedAttendances[]
 }
 

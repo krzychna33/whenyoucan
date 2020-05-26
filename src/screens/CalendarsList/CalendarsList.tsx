@@ -3,7 +3,7 @@ import {StoreInteface} from "../../stores/configureStore";
 import {startGetAuthMe, startLogout} from "../../actions/auth";
 import {connect} from "react-redux";
 import {AuthReducerInterface} from "../../reducers/AuthReducer";
-import {Button, Card, CardActions, CardContent, TextField} from "@material-ui/core";
+import {Button, Card, CardActions, CardContent, Switch, TextField} from "@material-ui/core";
 import {Link, RouteComponentProps} from "react-router-dom";
 import {
     deleteCalendar,
@@ -34,7 +34,9 @@ interface ICalendarsListState {
     connectedWeeklyCalendars: WeeklyCalendarDao[],
     newCalendarName: string,
     newCalendarDescription: string,
-    newCalendarPin: string
+    newCalendarPin: string,
+    expectUsersCountOption: boolean,
+    expectedUsersCount: number
 }
 
 class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListState> {
@@ -46,7 +48,9 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
             newCalendarName: "",
             connectedWeeklyCalendars: [],
             newCalendarDescription: "",
-            newCalendarPin: "1234"
+            newCalendarPin: "1234",
+            expectUsersCountOption: false,
+            expectedUsersCount: undefined
         }
     }
 
@@ -92,11 +96,24 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
         })
     };
 
+    handleExpectUsersCountOption = () => {
+        this.setState({
+            expectUsersCountOption: !this.state.expectUsersCountOption
+        })
+    }
+
+    onNewCalendarExpectedUsersCount = (e: any) => {
+        this.setState({
+            expectedUsersCount: e.target.value
+        })
+    }
+
     createCalendar = () => {
         postCreateCalendar({
             name: this.state.newCalendarName,
             description: this.state.newCalendarDescription,
-            pin: this.state.newCalendarPin
+            pin: this.state.newCalendarPin,
+            expectedUsersCount: this.state.expectedUsersCount
         }).then(() => {
             getWeeklyCalendars()
                 .then((response: any) => {
@@ -170,6 +187,27 @@ class CalendarsList extends React.Component<ICalendarsListProps, ICalendarsListS
                                                     onChange={this.onNewCalendarDescriptionChange}
                                                     value={this.state.newCalendarDescription}
                                                 />
+                                            </div>
+                                            <div className={style.addCalendar__3ndLine}>
+                                                <div className={style.addCalendar__3ndLine__switch}>
+                                                    <Switch
+                                                        checked={this.state.expectUsersCountOption}
+                                                        onChange={this.handleExpectUsersCountOption}
+                                                        name="checkedA"
+                                                        color={"primary"}
+                                                        inputProps={{'aria-label': 'secondary checkbox'}}
+                                                    />
+                                                </div>
+                                                <div className={style.addCalendar__3ndLine__input}>
+                                                    <TextField
+                                                        id="expectedUsersCount"
+                                                        type={"number"}
+                                                        label="Expected Users"
+                                                        onChange={this.onNewCalendarExpectedUsersCount}
+                                                        value={this.state.expectedUsersCount}
+                                                        disabled={!this.state.expectUsersCountOption}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                         <div>

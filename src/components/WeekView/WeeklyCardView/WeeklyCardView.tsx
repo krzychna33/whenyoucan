@@ -20,10 +20,14 @@ interface IWeeklyCardViewProps {
     day: moment.Moment
     user: UserDAO,
     reservedAttendances: ReservedAttendances[],
+
     addNewAttendance(time: moment.Moment, user: UserDAO): any,
+
     deleteNewAttendance(time: moment.Moment, user: UserDAO): any,
+
     usersColors: UsersColors,
-    usersCount: number
+    usersCount: number,
+    expectedUsersCount: number
 }
 
 class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
@@ -46,6 +50,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
     }
 
     renderHours = (): Array<any> => {
+        const {expectedUsersCount} = this.props;
         const hoursArray: Array<any> = [];
         const hour = this.props.day.clone();
         const {usersCount} = this.props;
@@ -91,13 +96,13 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                     key={i}
                     className={classNames({
                         [style.dailyHour]: true,
-                        [style.goodDailyHour]: hourUsers === usersCount
+                        [style.goodDailyHour]: this.props.expectedUsersCount ? hourUsers >= this.props.expectedUsersCount : hourUsers === usersCount
                     })}
                 >
                     <div
                         className={classNames({
                             [style.hourCursor]: !hasOwnAttendance,
-                            [style.goodHour]: hourUsers === usersCount
+                            [style.goodHour]: this.props.expectedUsersCount ? hourUsers >= this.props.expectedUsersCount : hourUsers === usersCount
                         })}
                         onClick={(event) => this.handleNewAttendance(event, hourHook, hasOwnAttendance)}
                     >
@@ -115,9 +120,9 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                 })
                             }
                             {
-                                reservedElements.length >= ITEMS_TO_DISPLAY+1 &&
+                                reservedElements.length >= ITEMS_TO_DISPLAY + 1 &&
                                 <div
-                                    key={"_" + reservedElements.length+1}
+                                    key={"_" + reservedElements.length + 1}
                                     className={style.lastReservationElement}>
                                     <div
                                         className={style.lastReservationElement__userLetter}
@@ -129,7 +134,7 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                                                 }
                                             })}
                                         </div>
-                                        +{reservedElements.length-ITEMS_TO_DISPLAY}
+                                        +{reservedElements.length - ITEMS_TO_DISPLAY}
                                     </div>
                                 </div>
                             }
@@ -161,14 +166,29 @@ class WeeklyCardView extends React.Component<IWeeklyCardViewProps> {
                             </div>
                         }
                         {
-                            usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 ?
-                            <span className={style.neededUsers}><AddIcon/> {usersCount-hourUsers}</span>:
-                            <span className={style.neededUsers} style={{visibility: "hidden"}}><AddIcon/> {usersCount-hourUsers}</span>
+                            expectedUsersCount ? expectedUsersCount - hourUsers <= 0.5 * expectedUsersCount && expectedUsersCount - hourUsers >= 0 ?
+                                <span className={style.neededUsers}><AddIcon/> {expectedUsersCount - hourUsers}</span> :
+                                <span className={style.neededUsers}
+                                      style={{visibility: "hidden"}}><AddIcon/> {0}</span>
+                                :
+                                usersCount - hourUsers <= 0.5 * usersCount && usersCount - hourUsers != 0 ?
+                                    <span className={style.neededUsers}><AddIcon/> {usersCount - hourUsers}</span> :
+                                    <span className={style.neededUsers}
+                                          style={{visibility: "hidden"}}><AddIcon/> {0}</span>
+
                         }
                         {
-                            usersCount-hourUsers <= 0.5 * usersCount && usersCount-hourUsers != 0 && !hasOwnAttendance ?
-                                <span className={style.youLeftWarn}><ErrorIcon/></span>:
-                                <span className={style.youLeftWarn}style={{visibility: "hidden"}}><ErrorIcon/></span>
+                            expectedUsersCount ? expectedUsersCount - hourUsers <= 0.5 * expectedUsersCount && expectedUsersCount - hourUsers != 0 && !hasOwnAttendance ?
+                                <span className={style.youLeftWarn}><ErrorIcon/></span> :
+                                !hasOwnAttendance ?
+                                    <span className={style.youLeftWarn} style={{color: "#FFF"}}><ErrorIcon/></span> :
+                                    <span className={style.youLeftWarn}
+                                          style={{visibility: "hidden"}}><ErrorIcon/></span>
+                                :
+                                usersCount - hourUsers <= 0.5 * usersCount && usersCount - hourUsers != 0 && !hasOwnAttendance ?
+                                    <span className={style.youLeftWarn}><ErrorIcon/></span> :
+                                    <span className={style.youLeftWarn}
+                                          style={{visibility: "hidden"}}><ErrorIcon/></span>
                         }
                     </div>
                 </div>

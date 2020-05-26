@@ -96,6 +96,7 @@ class WeekView extends React.Component<IWeekViewProps, IWeekViewState> {
                     reservedAttendances={dataToSend}
                     usersColors={this.props.weeklyCalendar.usersColors}
                     usersCount={this.props.weeklyCalendar.users.length}
+                    expectedUsersCount={this.props.weeklyCalendar.expectedUsersCount}
                 />
             )
         }

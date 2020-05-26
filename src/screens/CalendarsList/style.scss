@@ -65,6 +65,19 @@
         display: flex;
         flex-direction: column;
     }
+    &__3ndLine {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        &__switch {
+            padding-top: 15px;
+        }
+        &__input {
+            margin-left: 60px;
+        }
+    }
 }
 
 .calendarsList {

@@ -85,7 +85,7 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                         return userId;
                     }
                 })) {
-                    this.props.history.push("/calendars");
+                    this.props.history.push(`/calendar/${id}/join`);
                 }
 
                 subscribeToAttendanceEvent({
@@ -231,6 +231,10 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
                                                     <p>{weeklyCalendar.description}</p>
                                                 </div>
                                             }
+                                            <div className={style.roomInfo__description}>
+                                                <h4>Expected Users</h4>
+                                                <p><span>{weeklyCalendar.expectedUsersCount ? `Minimum ${weeklyCalendar.expectedUsersCount} people`: "All people connected with calendar"}</span></p>
+                                            </div>
                                         </div>
                                         <div className={style.roomInfo__users}>
                                             <h4>Users</h4>
