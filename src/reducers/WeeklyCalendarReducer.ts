@@ -1,10 +1,15 @@
 import * as moment from "moment";
 import {Moment} from "moment";
 import {
-    ADD_NEW_ATTENDANCE, CLEAR_DELETED_ATTENDANCES, CLEAR_NEW_ATTENDANCES, DELETE_NEW_ATTENDANCE,
+    ADD_NEW_ATTENDANCE,
+    CLEAR_CALENDAR_CACHE_DATA,
+    CLEAR_DELETED_ATTENDANCES,
+    CLEAR_NEW_ATTENDANCES,
+    DELETE_NEW_ATTENDANCE,
     GET_CALENDAR_ERROR,
     GET_CALENDAR_FETCH,
-    GET_CALENDAR_SUCCESS, SET_USERS_COLORS
+    GET_CALENDAR_SUCCESS,
+    SET_USERS_COLORS
 } from "../actions/actions.const";
 import {WeeklyCalendarDao} from "../api/weeklyCalendars";
 
@@ -34,6 +39,8 @@ const weeklyCardReducerDefaultState: WeeklyCalendarReducerInterface = {
 
 export default (state: WeeklyCalendarReducerInterface = weeklyCardReducerDefaultState, action: any) => {
     switch (action.type) {
+        case CLEAR_CALENDAR_CACHE_DATA:
+            return weeklyCardReducerDefaultState;
         case GET_CALENDAR_FETCH:
             return {
                 ...state,

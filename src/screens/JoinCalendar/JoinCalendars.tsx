@@ -56,8 +56,8 @@ const JoinCalendar: React.FC<IJoinCalendarProps> = (props: any) => {
     const joinCalendar = () => {
         postJoinCalendar(id, pin).then((response: any) => {
             if(response.status === 200) {
-                toast.success("Succesfully joined to calendar")
-                props.history.push("/calendars")
+                toast.success("Succesfully joined to calendar");
+                props.history.push(`/calendars/${id}`);
             }
         }).catch((e) => {
             showErrorMessage(e.data.message);

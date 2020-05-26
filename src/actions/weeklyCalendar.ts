@@ -1,6 +1,6 @@
 import * as moment from "moment";
 import {
-    ADD_NEW_ATTENDANCE, CLEAR_DELETED_ATTENDANCES,
+    ADD_NEW_ATTENDANCE, CLEAR_CALENDAR_CACHE_DATA, CLEAR_DELETED_ATTENDANCES,
     CLEAR_NEW_ATTENDANCES, DELETE_NEW_ATTENDANCE,
     GET_CALENDAR_ERROR,
     GET_CALENDAR_FETCH,
@@ -86,4 +86,8 @@ export const deleteNewAttendance = (time: moment.Moment, user: UserDAO) => {
 
 export const clearDeletedAttendances = () => ({
     type: CLEAR_DELETED_ATTENDANCES
+})
+
+export const clearCalendarCacheData = () => ({
+    type: CLEAR_CALENDAR_CACHE_DATA
 })

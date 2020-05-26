@@ -10,18 +10,17 @@ import {AuthReducerInterface} from "../../reducers/AuthReducer";
 import {CalendarUser, getCalendarUsers, postPushAttendances, postUpdateAttendances} from "../../api/weeklyCalendars";
 import {Link, RouteComponentProps} from "react-router-dom"
 import {
+    clearCalendarCacheData,
     clearDeletedAttendances,
     clearNewAttendances,
     setUsersColors,
-    startGetCalendar
+    startGetCalendar,
 } from "../../actions/weeklyCalendar";
 import classNames = require("classnames");
 import {UtilsReducerInterface} from "../../reducers/UtilsReducer";
 import {disconnectSubscriber, subscribeToAttendanceEvent} from "../../sockets/calendar";
 import {toast, Slide} from "react-toastify";
 import {NewAttendancesNotify} from "../../components/NewAttendancesNotify/NewAttendacnesNotify";
-import RemoveIcon from '@material-ui/icons/Remove';
-import AddIcon from '@material-ui/icons/Add';
 
 interface MatchParams {
     id: string
@@ -40,6 +39,8 @@ interface ICalendarProps extends RouteComponentProps<MatchParams> {
     setUsersColors(users: string[]): any
 
     clearDeletedAttendances(): any
+
+    clearCalendarCacheData(): any,
 
     authReducer: AuthReducerInterface,
     utilsReducer: UtilsReducerInterface
@@ -67,44 +68,58 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
     componentWillUnmount(): void {
         const {id} = this.props.match.params;
         disconnectSubscriber(id);
+        this.props.clearCalendarCacheData();
     }
 
     componentDidMount(): void {
         const {id} = this.props.match.params;
-        this.props.startGetCalendar(id).then(() => {
-            this.props.setUsersColors(this.props.weeklyCalendar.users);
-        });
-        this.props.startGetAuthMe().then(() => {
-            subscribeToAttendanceEvent({
-                userId: this.props.authReducer.user._id,
-                calendarId: id
-            }, () => {
-                if (!this.state.newAttendancesNotify) {
-                    this.setState({newAttendancesNotify: true}, () => {
-                        toast(
-                            <NewAttendancesNotify onRefresh={() => {
-                                this.props.startGetCalendar(id).then(() => {
-                                    this.setState({shouldRefresh: false})
-                                })
-                            }}/>,
-                            {
-                                transition: Slide,
-                                position: "top-center",
-                                hideProgressBar: true,
-                                className: style.toastStyle,
-                                autoClose: 5000,
-                                onClose: () => {
-                                    this.setState({newAttendancesNotify: false})
-                                }
-                            });
-                    })
-                }
-                this.setState({shouldRefresh: true})
+        this.props.startGetCalendar(id)
+            .then(() => {
+                this.props.setUsersColors(this.props.weeklyCalendar.users);
+                return this.props.startGetAuthMe();
             })
-        });
+            .then(() => {
+
+                if (!this.props.weeklyCalendar.users.find((userId) => {
+                    if (userId === this.props.authReducer.user._id) {
+                        return userId;
+                    }
+                })) {
+                    this.props.history.push("/calendars");
+                }
+
+                subscribeToAttendanceEvent({
+                    userId: this.props.authReducer.user._id,
+                    calendarId: id
+                }, () => {
+                    if (!this.state.newAttendancesNotify) {
+                        this.setState({newAttendancesNotify: true}, () => {
+                            toast(
+                                <NewAttendancesNotify onRefresh={() => {
+                                    this.props.startGetCalendar(id).then(() => {
+                                        this.setState({shouldRefresh: false})
+                                    })
+                                }}/>,
+                                {
+                                    transition: Slide,
+                                    position: "top-center",
+                                    hideProgressBar: true,
+                                    className: style.toastStyle,
+                                    autoClose: 5000,
+                                    onClose: () => {
+                                        this.setState({newAttendancesNotify: false})
+                                    }
+                                });
+                        })
+                    }
+                    this.setState({shouldRefresh: true})
+                })
+
+            });
+
         getCalendarUsers(id).then((response) => {
             this.setState({calendarUsers: response.data.results})
-        })
+        });
     }
 
     componentDidUpdate(prevProps: Readonly<ICalendarProps>, prevState: Readonly<ICalendarState>, snapshot?: any): void {
@@ -160,7 +175,7 @@ class Calendar extends React.Component<ICalendarProps, ICalendarState> {
         return (
             <React.Fragment>
                 {
-                    !this.props.authReducer.isLoading && this.props.authReducer.user ?
+                    !this.props.weeklyCalendar.isLoading &&  !this.props.authReducer.isLoading && this.props.authReducer.user ?
                         <div className={style.container} style={{overflowX: 'hidden'}}>
                             <div
                                 className={classNames({
@@ -311,7 +326,8 @@ const mapDispatchToProps = (dispatch: any) => {
         clearNewAttendances: () => dispatch(clearNewAttendances()),
         startGetCalendar: (id: string) => dispatch(startGetCalendar(id)),
         setUsersColors: (users: string[]) => dispatch(setUsersColors(users)),
-        clearDeletedAttendances: () => dispatch(clearDeletedAttendances())
+        clearDeletedAttendances: () => dispatch(clearDeletedAttendances()),
+        clearCalendarCacheData: () => dispatch(clearCalendarCacheData())
     }
 };
 
