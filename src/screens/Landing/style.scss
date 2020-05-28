@@ -9,3 +9,10 @@
         font-size: $font-size-xl;
     }
 }
+
+.content {
+    > h1 {
+        font-size: $font-size-l;
+    }
+    padding: 40px 40px 40px 40px;
+}
