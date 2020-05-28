@@ -8,6 +8,9 @@ class Landing extends React.Component {
         return (
             <div className={style.container}>
                 <Header/>
+                <div className={style.content}>
+                    <h1>New way to organize meeting with friends</h1>
+                </div>
             </div>
         )
     }
