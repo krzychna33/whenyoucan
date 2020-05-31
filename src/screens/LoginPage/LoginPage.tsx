@@ -23,7 +23,7 @@ class LoginPage extends React.Component<ILoginPageProps, ILoginPageState> {
         return (
             <div className={style.container}>
                 <div className={style.content}>
-                    <h1>WhenUCan.app</h1>
+                    <Link to={"/"}><h1>WhenYouCan.app</h1></Link>
                     <LoginForm/>
                     <div className={style.bottomInfo}>
                         <Link to={"/signup"}>Psst... No accout? Create a new one here</Link>

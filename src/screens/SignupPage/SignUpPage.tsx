@@ -18,7 +18,7 @@ class SignUpPage extends React.Component {
         return (
             <div className={style.container}>
                 <div className={style.content}>
-                    <h1>WhenUCan.app</h1>
+                    <Link to={"/"}><h1>WhenYouCan.app</h1></Link>
                     <SignUpForm/>
                     <div className={style.bottomInfo}>
                         <Link to={"/login"}>Already have account? Go to login.</Link>
