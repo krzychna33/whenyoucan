@@ -1,18 +1,230 @@
 @import "../../styles/variables";
 
 .container {
-    background-color: $color-dark;
+    background: rgb(30,42,57);
+    background: linear-gradient(180deg, rgba(30,42,57,1) 0%, rgba(67,85,107,1) 100%);
     color: white;
-    width: 100vw;
-    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+
     > h1 {
         font-size: $font-size-xl;
     }
 }
 
-.content {
-    > h1 {
-        font-size: $font-size-l;
+
+.introSection {
+    padding-top: 150px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    min-height: calc(100vh - 72px);
+
+    @include laptop {
+        padding-top: 40px;
+        flex-direction: column;
+        min-height: auto;
+        padding-bottom: 100px;
     }
-    padding: 40px 40px 40px 40px;
+
+    &__left {
+        box-sizing: border-box;
+        padding-left: 80px;
+        width: 40%;
+        line-height: 1.4;
+
+        @include laptop {
+            padding-left: 30px;
+            padding-right: 30px;
+            width: 100%;
+        }
+        > h1 {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-size: $font-size-xxl;
+
+            @include laptop {
+                font-size: $font-size-l;
+            }
+        }
+        > h2 {
+            font-size: $font-size-xl;
+
+            @include laptop {
+                font-size: $font-size-ml;
+            }
+        }
+        > h3 {
+            font-size: $font-size-l;
+
+            @include laptop {
+                font-size: $font-size-ml;
+            }
+
+            > span {
+                color: $color-highlighted;
+            }
+        }
+
+        &__desc {
+            padding-top: 80px;
+
+            @include laptop {
+                padding-top: 60px;
+            }
+            > p {
+                padding-bottom: 15px;
+                font-size: $font-size-m;
+            }
+        }
+        &__btn {
+            padding-top: 30px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @include laptop {
+                padding-top: 60px;
+            }
+            a {
+                color: white;
+            }
+        }
+    }
+
+    &__right {
+        box-sizing: border-box;
+        width: 60%;
+
+        @include laptop {
+            display: none;
+        }
+        > img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+
+.howSection {
+    box-sizing: border-box;
+    min-height: 100vh;
+    background-color: white;
+    color: black;
+    padding: 40px;
+
+    @include laptop {
+        padding: 40px 15px;
+    }
+    &__head {
+        width: 100%;
+        padding-bottom: 60px;
+        text-align: center;
+
+        @include laptop {
+            padding-bottom: 30px;
+        }
+
+        h2 {
+            font-size: $font-size-xl;
+            @include laptop {
+                font-size: $font-size-l;
+            }
+        }
+    }
+    &__howItems {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &__getStarted {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+    }
+}
+
+.howItem {
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12), 0px 1px 3px 0px rgba(0,0,0,0.12);
+    width: 60%;
+    padding: 30px 20px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+
+    @include laptop {
+        width: 90%;
+    }
+    &__num {
+        background-color: $color-dark;
+        flex: 0 0 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: $font-size-l;
+        font-weight: 600;
+        box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12), 0px 1px 3px 0px rgba(0,0,0,0.12);
+
+        @include laptop {
+            flex: 0 0 60px;
+            height: 60px;
+            font-size: $font-size-ml;
+        }
+    }
+
+    &__desc {
+        padding-left: 40px;
+
+        @include laptop {
+            padding-left: 25px;
+        }
+        h3 {
+            font-size: $font-size-ml;
+            margin-bottom: 15px;
+        }
+        p {
+            font-size: $font-size-s;
+            color: $color-grey;
+            line-height: 1.3;
+        }
+    }
+}
+
+footer {
+    width: 100%;
+    background-color: $color-dark;
+    padding: 30px 40px;
+    display: flex;
+    justify-content: space-between;
+    @include laptop {
+        display: flex;
+        flex-direction: column;
+        > div {
+            width: 100%;
+            text-align: center;
+            &:not(:last-child) {
+                padding-bottom: 15px;
+            }
+        }
+    }
+}
+
+.devBy {
+    svg {
+        height: 20px;
+        margin-bottom: -3px;
+    }
+    a {
+        color: $color-highlighted;
+    }
 }
