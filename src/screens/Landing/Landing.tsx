@@ -18,11 +18,12 @@ class Landing extends React.Component {
                         <h3>with friends</h3>
                         <div className={style.introSection__left__desc}>
                             <p>
-                                Got frustrated while choosing a time which will be appropriate to every person?
+                                Got frustrated while choosing a time which would be appropriate to every person?
                             </p>
-                            <p>Here we are! WhenYouCan is the platform where you can create your own calendar and
-                                share it with your friends.</p>
-
+                            <p>
+                                Here we are! WhenYouCan is a platform where you can create your own calendar and
+                                share it with your friends.
+                            </p>
                         </div>
                         <div className={style.introSection__left__btn}>
                             <Link to={"/calendars"}>
@@ -43,8 +44,8 @@ class Landing extends React.Component {
                             <div className={style.howItem__num}>1</div>
                             <div className={style.howItem__desc}>
                                 <h3>Create new calendar</h3>
-                                <p>Register new account or login and make new instance of calendar. You can set up description and
-                                minimum number of people excepted in your event.
+                                <p>Register new account or login into existing one and make new instance of calendar. You can set up description, pin and
+                                minimum number of people you except to participate in your event.
                                 </p>
                             </div>
                         </div>
@@ -59,7 +60,7 @@ class Landing extends React.Component {
                             <div className={style.howItem__num}>3</div>
                             <div className={style.howItem__desc}>
                                 <h3>Share your calendar by copying the calendar join URL</h3>
-                                <p>Copy link and pin and give it to your friends. You can also copy invitation message.</p>
+                                <p>Copy link, pin and send it to your friends. You can also copy invitation message.</p>
                             </div>
                         </div>
                         <div className={style.howItem}>

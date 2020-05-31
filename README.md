@@ -2,17 +2,18 @@
 
 ### About
 
-***WhenYouCan is an app for organizing events and meeting (and whatever you want). It solves
+***WhenYouCan is an app to organize events and meetings (and whatever you want). It solves a
 problem with choosing suitable times in group of people.***
 
-In the app you can create your own calendar and share it with other people.
-Calendars are protected by PIN. Every people in calendar can add their own suitable times.
-If some time is right for all people (or number of people you set up when creating calendar) this
-time will be highlighted. Users will also getting extra tips, which time they should choose to get event started as soon as possible.
+In the app you can create your own calendar and share it to other people.
+Calendars are protected by PIN. Every person in the calendar can add their own suitable times.
+If some time is right for everyone (or number of people you set up when creating calendar) this
+time will be highlighted. Users will also getting extra tips, which time they should choose to get event started 
+as soon as possible.
 
-Concept and whole app is created by @krzychna33.
-**App is still under development, so propably there are a lot of things to fix.**
-There are a lot of ideas for upcoming features to be introduced into the app.
+Concept and whole app has been created by @krzychna33.
+**App is still under development, so probably there are a lot of things to fix.**
+There are a lot of ideas for upcoming features that will be introduced into the app in the future.
 
 Things for nearest future:
 * Monthly View
@@ -36,9 +37,9 @@ https://whenyoucan-frontend-staging.herokuapp.com/
 
 ### Tech Stack
 
-The App is crafted with TypeScript, React and Redux (and a lot of smaller tools).
+The App has been crafted with TypeScript, React and Redux (and a lot of smaller tools).
 
-*Backend is written in Node.js, Typescript and Express, you can learn more about backend here:*
+*Backend has been written in Node.js, Typescript and Express, you can learn more about backend here:*
 
 https://github.com/krzychna33/whenyoucan-backend
 
