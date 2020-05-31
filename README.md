@@ -22,7 +22,7 @@ Things for nearest future:
 
 ### Links
 
-Production:
+Production: (App is hosted on heroku free dyno, so first launch may take some time)
 https://whenyoucan-frontend.herokuapp.com/ \
 Staging:
 https://whenyoucan-frontend-staging.herokuapp.com/
