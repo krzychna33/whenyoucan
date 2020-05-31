@@ -9,9 +9,13 @@ import {StoreInteface} from "../../stores/configureStore";
 import {AuthModal} from "../AuthModal/AuthModal";
 import {HiUser} from "../HiUser/HiUser";
 import {useEffect, useState} from "react";
+import classNames = require("classnames");
 
+interface IHeaderProps {
+    bgOff?: boolean
+}
 
-export const Header: React.FC = () => {
+export const Header: React.FC<IHeaderProps> = (props) => {
 
     const authReducer: AuthReducerInterface = useSelector((store: StoreInteface) => store.authReducer);
     const dispatch = useDispatch();
@@ -21,7 +25,10 @@ export const Header: React.FC = () => {
     }, [])
 
     return (
-        <div className={style.header}>
+        <div className={classNames({
+            [style.header]: true,
+            [style.bg]: !props.bgOff
+        })}>
             <Link to={"/"} className={style.logoDesktop}><h1>WhenYouCan.app</h1></Link>
             <Link to={"/"} className={style.logoMobile}><h1>WHEN</h1></Link>
             {
