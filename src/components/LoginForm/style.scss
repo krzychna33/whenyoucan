@@ -11,12 +11,15 @@
         flex-direction: column;
     }
     button {
-        margin-top: 40px;
+        margin-top: 30px;
         width: 70%;
     }
 }
 
 .fbOff {
     color: $color-highlighted;
-    margin-top: 5px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: $font-size-s;
+    line-height: 1.2;
 }

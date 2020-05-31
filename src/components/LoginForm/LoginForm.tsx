@@ -35,6 +35,7 @@ export const LoginForm = () => {
             <Button variant="contained" color="primary" onClick={handleLogin}>Login</Button>
             <Button variant="contained" color="primary" onClick={handleFbLogin}>Login via Facebook</Button>
             <p className={style.fbOff}>Facebook login temporary not working due to facebook app review</p>
+
         </form>
     )
 }
