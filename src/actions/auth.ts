@@ -87,6 +87,10 @@ export const startGetAuthMe = () => {
         return getAuthMe().then((response) => {
             dispatch(getAuthMeSuccess(response.data));
         }).catch((e) => {
+            if (e.status === 401 && localStorage.getItem("token"))  {
+                localStorage.removeItem("token");
+                dispatch(setLoggedOut());
+            }
             dispatch(getAuthMeError());
         })
     }
